@@ -1,3 +1,7 @@
+/*
+	@author Dominic Dewhurst
+*/
+
 package com.groupe.roomgame;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -11,8 +15,7 @@ public class Main extends ApplicationAdapter {
 	Texture img;
 
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+
 	}
 
 	public void render () {
