@@ -1,3 +1,5 @@
+package com.groupe.roomgame.networking;
+
 import java.net.DatagramPacket;
 import java.util.concurrent.ConcurrentLinkedQueue;
 

@@ -1,10 +1,11 @@
+package com.groupe.roomgame.networking;
+
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.net.DatagramSocket;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
 
 public class HoldElection {
 
