@@ -35,7 +35,7 @@ public class Raft {
 	 * @return the package used to vote for the leader
 	 *
 	 */
-	public static byte[] getVotePackage(InetAddress ip, int term) {
+	public static byte[] getVotePacket(InetAddress ip, int term) {
 		byte opCode = 0;
 		byte[] t = new byte[4];
 
