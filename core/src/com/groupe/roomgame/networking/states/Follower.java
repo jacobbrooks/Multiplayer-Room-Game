@@ -4,29 +4,37 @@ package com.groupe.roomgame.networking.states;
 * @author Dominic Dewhurst
 */
 
+import java.net.InetAddress;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 
-import java.util.concurrent.ThreadLocalRandom;
 import java.io.IOException;
 
-public class Follower {
-	
-	private DatagramSocket socket;
-	public static boolean running = true;
-	private boolean voted, isCandidate;
-	public InetAddress leader;
-	private int port;
-	private int votePort;
+import java.util.concurrent.ThreadLocalRandom;
 
-	private int currentTerm;
+import com.groupe.roomgame.networking.IPs;
+import com.groupe.roomgame.networking.Sender;
+import com.groupe.roomgame.networking.packets.*;
+
+public class Follower {
+
+	/* State of member when election has yet to start 
+	 * First to timeout becomes a candidate
+	 * Open first candidacy packet receieved vote that member as the leader
+	 */
+	
+	public InetAddress leader;
+	private DatagramSocket socket;
+	
+	private int port, votePort, currentTerm;
+	private boolean running, voted, isCandidate;
 
 	public Follower(int port, int votePort) throws IOException {
 		this.port = port;
 		this.votePort = votePort;
 		this.socket = new DatagramSocket(port);
+		this.running = true;
 		this.voted = false;
 		this.isCandidate = false;
 		this.currentTerm = 1;
@@ -72,8 +80,8 @@ public class Follower {
 		}
 	}
 
+	/* received candidacy packets before timeout */
 	public void vote(CandidacyPacket candidacyPacket, byte votedFor, String ip) throws IOException {
-		/* received canidate vote before timeout */
 		this.currentTerm = candidacyPacket.getTerm();
 
 		InetAddress canidate = InetAddress.getByName(ip);
@@ -85,12 +93,12 @@ public class Follower {
 		System.out.println("Sent vote packet to: " + ip);
 	}
 
+	/* timed out before receiving any candidacy packets - therefore becomes a potential candidate */
 	public void becomeCandidate() throws IOException {
 		CandidacyPacket candidacyPacket = new CandidacyPacket(++currentTerm);
 
 		for (int i = 0; i < IPs.getIPs.length; i++)
 			new Sender(candidacyPacket, IPs.getIPs[i], port).start();
-
 		isCandidate = true;
 	}
 }

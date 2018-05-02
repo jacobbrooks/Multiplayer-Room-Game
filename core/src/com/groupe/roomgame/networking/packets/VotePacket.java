@@ -8,14 +8,18 @@ import java.nio.ByteBuffer;
 
 public class VotePacket extends ElectionPacket {
 
-	/* Packet used for voting a certain member to be the leader */
+	/* Packet used for voting a certain member to be the leader 
+	 * 1 byte for opCode and 1 byte for yes or no vote
+	*/
 
 	private byte votedFor;
-	private int size = 2 * (Byte.SIZE / 8);
 	
+	/* create new vote packet */
 	public VotePacket(byte votedFor){
-		this.votedFor = votedFor;
 		this.opCode = 1;
+		this.size = 2 * (Byte.SIZE / 8);
+		this.votedFor = votedFor;
+		
 		this.packet = new byte[size];
 
 		ByteBuffer buffer = ByteBuffer.allocate(size);
@@ -24,6 +28,7 @@ public class VotePacket extends ElectionPacket {
 		buffer.get(packet);
 	}
 
+	/* used by receiver to unwrap received vote packet */
 	public VotePacket(byte[] receivedPacket){
 		ByteBuffer buffer = ByteBuffer.wrap(receivedPacket);
 		this.opCode = buffer.get();
@@ -33,9 +38,5 @@ public class VotePacket extends ElectionPacket {
 	/* return a 1 if candidate was voted for, 0 otherwise */
 	public byte wasVotedFor(){
 		return this.votedFor;
-	}
-
-	public String toString(){
-		return "opCode: " + this.opCode + " | term: " + this.term;
 	}
 }

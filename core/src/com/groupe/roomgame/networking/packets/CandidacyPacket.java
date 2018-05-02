@@ -11,11 +11,10 @@ public class CandidacyPacket extends ElectionPacket {
 	/* Packet used when group member times out during election,
 	 * claiming to everyone else in the group that he should be the leader */
 
-	private int size = (Byte.SIZE / 8) + Integer.SIZE / 8;
-
 	public CandidacyPacket(int term){
 		super(term);
 		this.opCode = 0;
+		this.size = (Byte.SIZE / 8) + Integer.SIZE / 8;
 		this.packet = new byte[size];
 
 		ByteBuffer buffer = ByteBuffer.allocate(size);

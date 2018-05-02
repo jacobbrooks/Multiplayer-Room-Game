@@ -4,13 +4,18 @@ package com.groupe.roomgame.networking;
 * @author Dominic Dewhurst
 */
 
+import java.net.InetAddress;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
+
 import java.io.IOException;
+
+import com.groupe.roomgame.networking.packets.ElectionPacket;
 
 public class Sender extends Thread {
 
+	/* Class that can be used to send packets concurrently */
+	
 	private byte[] bytes;
 	private InetAddress address;
 	private DatagramSocket socket;

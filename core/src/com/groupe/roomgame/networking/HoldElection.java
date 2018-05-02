@@ -6,6 +6,8 @@ package com.groupe.roomgame.networking;
 
 import java.io.IOException;
 
+import com.groupe.roomgame.networking.states.Follower;
+
 public class HoldElection {
 
 	private static final int PORT = 2703;

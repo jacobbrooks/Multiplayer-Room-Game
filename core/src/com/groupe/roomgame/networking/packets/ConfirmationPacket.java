@@ -7,11 +7,13 @@ package com.groupe.roomgame.networking.packets;
 import java.nio.ByteBuffer;
 
 public class ConfirmationPacket extends ElectionPacket {
-	/* Packet sent out by leader to indicate to everyone he was voted leader */
+	/* Packet sent out by leader to indicate to everyone he was voted leader 
+	 * Contains no data besides the opCode indicated that a leader was been agreed on
+	 */
 
-	private int size = Byte.SIZE / 8;
 	public ConfirmationPacket(){
 		this.opCode = 2;
+		this.size = Byte.SIZE / 8;
 		this.packet = new byte[size];
 
 		ByteBuffer buffer = ByteBuffer.allocate(size);

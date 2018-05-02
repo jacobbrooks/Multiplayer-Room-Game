@@ -6,9 +6,15 @@ package com.groupe.roomgame.networking.states;
 
 import java.io.IOException;
 
+import com.groupe.roomgame.networking.IPs;
+import com.groupe.roomgame.networking.Sender;
 import com.groupe.roomgame.networking.packets.ConfirmationPacket;
 
 public class Leader {
+
+	/* State when a candidate has been elected leader 
+	 * Has to send confirmation packets to everyone in the group 
+	 */
 	
 	private int port;
 
@@ -16,6 +22,7 @@ public class Leader {
 		this.port = 2703;
 	}
 
+	/* Concurrently send confirmation packets to all members in the group */
 	public void sendConfirmations() throws IOException {
 		ConfirmationPacket confirmationPacket = new ConfirmationPacket();
 		System.out.println("I became leader.");
