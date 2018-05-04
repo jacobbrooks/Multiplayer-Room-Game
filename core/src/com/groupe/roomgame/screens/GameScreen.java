@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,13 +15,14 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.groupe.roomgame.networking.Listener;
+import com.groupe.roomgame.networking.Updater;
+import com.groupe.roomgame.networking.packets.DataPacket;
 import com.groupe.roomgame.objects.Hallway;
 import com.groupe.roomgame.objects.Player;
 import com.groupe.roomgame.objects.Room;
 import com.groupe.roomgame.objects.RoomWalls;
 import com.groupe.roomgame.tools.Constants;
-import com.groupe.roomgame.networking.Listener;
-import com.badlogic.gdx.Input.Keys;
 
 public class GameScreen implements Screen{
 
@@ -33,6 +35,7 @@ public class GameScreen implements Screen{
 	private Room[] rooms;
 	private Player p;
 	private Listener listener;
+	private Updater updater;
 	
 	private ConcurrentHashMap<Integer, Player> gameState;
 
@@ -43,11 +46,13 @@ public class GameScreen implements Screen{
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
 		this.gameState = new ConcurrentHashMap<Integer, Player>();
-		p = new Player(0, gameState, 350f, 350f, world);
+		p = new Player(1, gameState, 450f, 450f, world);
 		gameState.put(p.getId(), p);
 		listener = new Listener(gameState, world);
 		listener.initialListen();
 		listener.updateListen();
+		updater = new Updater();
+		updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
 	}
 
 	private void loadMap(String mapName) {
@@ -80,7 +85,6 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		world.step(1/60f, 8, 3);
 		
 		renderer.render();
 		renderer.setView(camera);
@@ -88,11 +92,15 @@ public class GameScreen implements Screen{
 		camera.position.set(p.getSprite().getX(), p.getSprite().getY(), 0);
 		camera.update();
 		
-		
-		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-
+		
+		float lastX = p.getBody().getPosition().x;
+		float lastY = p.getBody().getPosition().y;
+		
+		float lastVelX = p.getBody().getLinearVelocity().x;
+		float lastVelY = p.getBody().getLinearVelocity().y;
+		
 		p.getBody().setLinearVelocity(new Vector2(0f, 0f));
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
 			p.getBody().setLinearVelocity(new Vector2(-1f, 0f));
@@ -111,13 +119,22 @@ public class GameScreen implements Screen{
 			p.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
 		
+		world.step(1/60f, 8, 3);
+
+		float dx = p.getBody().getPosition().x - lastX;
+		float dy = p.getBody().getPosition().y - lastY;
+						
+		if (dx == 0 && dy == 0)
+			System.out.println(dx + " " + dy);
+		else
+			updater.update(new DataPacket(p.getId(), dx, dy));
+		
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
 			Player tmp = gameState.get(it.next());
 			tmp.render(batch);
 		}
 		
-		//p.render(batch);
 		batch.end();
 		
 		debug.render(world, camera.combined);
