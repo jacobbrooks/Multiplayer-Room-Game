@@ -118,6 +118,8 @@ public class GameScreen implements Screen{
 			p.getBody().setLinearVelocity(new Vector2(0f, -1f));
 			p.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
+
+		world.step(1/60f, 8, 3);
 		
 		world.step(1/60f, 8, 3);
 

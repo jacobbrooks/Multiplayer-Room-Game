@@ -18,11 +18,13 @@ public class Player {
 	private Body body;
 	private Sprite sprite;
 	private int id;
+	private World world;
 	
 	public Player(int id, ConcurrentHashMap<Integer, Player> gameState, float x, float y, World world) {
 		this.id = id;
 		this.body = BodyBuilder.createCircle(world, BodyType.DynamicBody, x, y, 30);
 		this.sprite = new Sprite(new Texture("characters/person.png"));
+		this.world = world;
 	}
 	
 	public Body getBody() {
@@ -42,7 +44,10 @@ public class Player {
 	
 
 	public void update(float dx, float dy){
-		body.setTransform(body.getPosition().x + dx, body.getPosition().y + dy, body.getAngle());
+		if(!world.isLocked()){
+			body.setTransform(body.getPosition().x + dx, body.getPosition().y + dy, 0f);
+			body.setAwake(true);
+		}
 	}
 
 	
