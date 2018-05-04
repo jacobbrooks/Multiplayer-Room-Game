@@ -19,6 +19,8 @@ import com.groupe.roomgame.objects.Player;
 import com.groupe.roomgame.objects.Room;
 import com.groupe.roomgame.objects.RoomWalls;
 import com.groupe.roomgame.tools.Constants;
+import com.groupe.roomgame.networking.Listener;
+import com.badlogic.gdx.Input.Keys;
 
 public class GameScreen implements Screen{
 
@@ -30,8 +32,10 @@ public class GameScreen implements Screen{
 	private World world;
 	private Room[] rooms;
 	private Player p;
+	private Listener listener;
 	
 	private ConcurrentHashMap<Integer, Player> gameState;
+
 
 	public GameScreen(SpriteBatch batch){
 		this.batch = batch;
@@ -41,7 +45,9 @@ public class GameScreen implements Screen{
 		this.gameState = new ConcurrentHashMap<Integer, Player>();
 		p = new Player(0, gameState, 350f, 350f, world);
 		gameState.put(p.getId(), p);
-		gameState.put(1, new Player(1, gameState, 400f, 400f, world));
+		listener = new Listener(gameState, world);
+		listener.initialListen();
+		listener.updateListen();
 	}
 
 	private void loadMap(String mapName) {
@@ -86,6 +92,24 @@ public class GameScreen implements Screen{
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+
+		p.getBody().setLinearVelocity(new Vector2(0f, 0f));
+		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
+			p.getBody().setLinearVelocity(new Vector2(-1f, 0f));
+			p.getSprite().setRotation((float) Math.toDegrees(Math.PI));
+		}
+		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
+			p.getBody().setLinearVelocity(new Vector2(1f, 0f));
+			p.getSprite().setRotation((float) 0f);
+		}
+		if(Gdx.input.isKeyPressed(Keys.UP)){
+			p.getBody().setLinearVelocity(new Vector2(0f, 1f));
+			p.getSprite().setRotation((float) Math.toDegrees(Math.PI / 2));
+		}
+		if(Gdx.input.isKeyPressed(Keys.DOWN)){
+			p.getBody().setLinearVelocity(new Vector2(0f, -1f));
+			p.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
+		}
 		
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {

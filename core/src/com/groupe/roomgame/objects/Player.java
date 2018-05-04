@@ -34,31 +34,16 @@ public class Player {
 	}
 	
 	public void render(SpriteBatch sb) {
-		body.setLinearVelocity(new Vector2(0f, 0f));
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-			body.setLinearVelocity(new Vector2(-1f, 0f));
-			sprite.setRotation((float) Math.toDegrees(Math.PI));
-		}
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
-			body.setLinearVelocity(new Vector2(1f, 0f));
-			sprite.setRotation((float) 0f);
-		}
-		if(Gdx.input.isKeyPressed(Keys.UP)){
-			body.setLinearVelocity(new Vector2(0f, 1f));
-			sprite.setRotation((float) Math.toDegrees(Math.PI / 2));
-		}
-		if(Gdx.input.isKeyPressed(Keys.DOWN)){
-			body.setLinearVelocity(new Vector2(0f, -1f));
-			sprite.setRotation((float) Math.toDegrees(3 * Math.PI / 2));
-		}
-		
-		
 		sprite.setPosition((float)(body.getPosition().x - sprite.getWidth() / 2), (float)(body.getPosition().y - sprite.getHeight() / 2));
 		sprite.setOriginCenter();
 		sprite.setSize(1, 1);
 		sprite.draw(sb);
 	}
 	
+
+	public void update(float dx, float dy){
+		body.setTransform(body.getPosition().x + dx, body.getPosition().y + dy, body.getAngle());
+	}
 
 	
 	public int getId() {
