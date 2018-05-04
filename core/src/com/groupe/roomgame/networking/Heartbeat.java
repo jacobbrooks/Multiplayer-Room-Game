@@ -2,7 +2,7 @@
  * Michael E Anilonis
  * Apr 26, 2018
  */
-package com.groupe.roomgame.networking.Heartbeat;
+package com.groupe.roomgame.networking;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

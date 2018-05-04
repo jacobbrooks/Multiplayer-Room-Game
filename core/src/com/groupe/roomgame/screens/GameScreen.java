@@ -1,7 +1,9 @@
 package com.groupe.roomgame.screens;
 
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.groupe.roomgame.objects.Hallway;
 import com.groupe.roomgame.objects.Player;
 import com.groupe.roomgame.objects.Room;
+import com.groupe.roomgame.objects.RoomWalls;
 import com.groupe.roomgame.tools.Constants;
 
 public class GameScreen implements Screen{
@@ -27,13 +30,18 @@ public class GameScreen implements Screen{
 	private World world;
 	private Room[] rooms;
 	private Player p;
+	
+	private ConcurrentHashMap<Integer, Player> gameState;
 
 	public GameScreen(SpriteBatch batch){
 		this.batch = batch;
 		this.world = new World(new Vector2(0, 0), true);
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
-		p = new Player(world);
+		this.gameState = new ConcurrentHashMap<Integer, Player>();
+		p = new Player(0, gameState, 350f, 350f, world);
+		gameState.put(p.getId(), p);
+		gameState.put(1, new Player(1, gameState, 400f, 400f, world));
 	}
 
 	private void loadMap(String mapName) {
@@ -49,6 +57,7 @@ public class GameScreen implements Screen{
 	
 	private void loadObjects(){
 		new Hallway(map, world, "Hallway");
+		new RoomWalls(map, world, "Room Walls");
 		for (int i = 0; i < rooms.length; i++)
 			rooms[i] = new Room(map, world, "Room " + (i + 1));
 	}
@@ -73,9 +82,18 @@ public class GameScreen implements Screen{
 		camera.position.set(p.getSprite().getX(), p.getSprite().getY(), 0);
 		camera.update();
 		
+		
+		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		p.render(batch);
+		
+		Iterator<Integer> it = gameState.keySet().iterator();
+		while(it.hasNext()) {
+			Player tmp = gameState.get(it.next());
+			tmp.render(batch);
+		}
+		
+		//p.render(batch);
 		batch.end();
 		
 		debug.render(world, camera.combined);

@@ -22,7 +22,7 @@ public class VoteCounter extends Thread {
 	}
 
 	public void run(){
-		if (new VotePacket(packet.getData().wasVotedFor() == 1)
+		if (new VotePacket(packet.getData()).wasVotedFor() == 1)
 			votes.getAndIncrement();
 	}
 }

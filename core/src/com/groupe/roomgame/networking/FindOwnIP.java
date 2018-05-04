@@ -1,3 +1,9 @@
+/**
+ * Michael E Anilonis
+ * Apr 26, 2018
+ */
+
+package com.groupe.roomgame.networking;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,6 +20,7 @@ import java.net.InetAddress;
  *
  * @author maniloni
  */
+
 public class FindOwnIP {
 
     /**
