@@ -52,6 +52,7 @@ public class Listener{
 						int id = byteBuffer.getInt();
 						float dx = byteBuffer.getFloat();
 						float dy = byteBuffer.getFloat();
+						//System.out.println("vx: " + vx + ", vy: " + vy);
 						gameState.get(id).update(dx, dy);
 					}catch(IOException e){
 						e.printStackTrace();

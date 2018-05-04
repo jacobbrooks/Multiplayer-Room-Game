@@ -80,7 +80,6 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		world.step(1/60f, 8, 3);
 		
 		renderer.render();
 		renderer.setView(camera);
@@ -110,6 +109,8 @@ public class GameScreen implements Screen{
 			p.getBody().setLinearVelocity(new Vector2(0f, -1f));
 			p.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
+
+		world.step(1/60f, 8, 3);
 		
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
