@@ -48,11 +48,13 @@ public class GameScreen implements Screen{
 		this.gameState = new ConcurrentHashMap<Integer, Player>();
 		p = new Player(1, gameState, 450f, 450f, world);
 		gameState.put(p.getId(), p);
+
+		updater = new Updater();
+		updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
+
 		listener = new Listener(gameState, world);
 		listener.initialListen();
 		listener.updateListen();
-		updater = new Updater();
-		updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
 	}
 
 	private void loadMap(String mapName) {
@@ -118,8 +120,6 @@ public class GameScreen implements Screen{
 			p.getBody().setLinearVelocity(new Vector2(0f, -1f));
 			p.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
-
-		world.step(1/60f, 8, 3);
 		
 		world.step(1/60f, 8, 3);
 
