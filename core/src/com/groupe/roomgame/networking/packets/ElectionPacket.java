@@ -16,6 +16,7 @@ public class ElectionPacket {
 	 *	0 - Candidacy Packet
 	 *	1 - Vote Packet
 	 *	2 - Leader Confirmation Packet 
+	 *  3 - Presence Packet
 	 */
 
 	protected byte opCode;

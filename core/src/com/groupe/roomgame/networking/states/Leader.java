@@ -23,7 +23,7 @@ public class Leader {
 	}
 
 	/* Concurrently send confirmation packets to all members in the group */
-	public void sendConfirmations() throws IOException {
+	public boolean sendConfirmations() throws IOException {
 		ConfirmationPacket confirmationPacket = new ConfirmationPacket();
 		System.out.println("I became leader.");
 
@@ -31,6 +31,6 @@ public class Leader {
 			new Sender(confirmationPacket, IPs.getIPs[i], port).start();
 
 		System.out.println("Sent confirmationPackets");
-		System.exit(0);
+		return true;
 	}
 }
