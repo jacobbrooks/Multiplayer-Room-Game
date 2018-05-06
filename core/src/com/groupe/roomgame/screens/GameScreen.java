@@ -38,21 +38,29 @@ public class GameScreen implements Screen{
 	private Updater updater;
 	
 	private ConcurrentHashMap<Integer, Player> gameState;
+	private boolean isLeader;
 
-
-	public GameScreen(SpriteBatch batch){
+	public GameScreen(SpriteBatch batch, boolean isLeader){
 		this.batch = batch;
+		this.isLeader = isLeader;
 		this.world = new World(new Vector2(0, 0), true);
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
 		this.gameState = new ConcurrentHashMap<Integer, Player>();
+		
 		p = new Player(1, gameState, 450f, 450f, world);
 		gameState.put(p.getId(), p);
+		
 		listener = new Listener(gameState, world);
-		listener.initialListen();
-		listener.updateListen();
 		updater = new Updater();
-		updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
+
+		if (isLeader) {
+			listener.initialListen();
+			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
+		} else {
+			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
+			listener.initialListen();
+		}
 	}
 
 	private void loadMap(String mapName) {
@@ -118,8 +126,6 @@ public class GameScreen implements Screen{
 			p.getBody().setLinearVelocity(new Vector2(0f, -1f));
 			p.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
-
-		world.step(1/60f, 8, 3);
 		
 		world.step(1/60f, 8, 3);
 
