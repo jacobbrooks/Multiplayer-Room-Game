@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import com.groupe.roomgame.networking.packets.DataPacket;
+import com.groupe.roomgame.networking.IPs;
 
 public class Updater {
 
@@ -15,7 +16,7 @@ public class Updater {
 	public Updater() {
 		try {
 			this.socket = new DatagramSocket();
-			this.address = InetAddress.getByName("pi.cs.oswego.edu");
+			this.address = IPs.nuc2;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -26,7 +27,6 @@ public class Updater {
 			byte[] bytes = packet.getBytes();
 			DatagramPacket dgPacket = new DatagramPacket(bytes, bytes.length, address, 6145);
 			socket.send(dgPacket);
-			System.out.println("sent.");
 		} catch (IOException e) {
 			
 		}
