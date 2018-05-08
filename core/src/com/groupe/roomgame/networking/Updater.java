@@ -16,7 +16,7 @@ public class Updater {
 	public Updater() {
 		try {
 			this.socket = new DatagramSocket();
-			this.address = IPs.nuc2;
+			this.address = IPs.nuc1;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
