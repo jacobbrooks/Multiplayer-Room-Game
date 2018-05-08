@@ -29,6 +29,9 @@ import com.groupe.roomgame.objects.Room;
 import com.groupe.roomgame.objects.RoomWalls;
 import com.groupe.roomgame.tools.BodyBuilder;
 import com.groupe.roomgame.tools.Constants;
+import com.groupe.roomgame.networking.Heartbeat;
+import com.groupe.roomgame.objects.Character;
+import com.groupe.roomgame.objects.Animal;
 
 public class GameScreen implements Screen{
 
@@ -52,18 +55,29 @@ public class GameScreen implements Screen{
 		this.world = new World(new Vector2(0, 0), true);
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
-		this.gameState = new ConcurrentHashMap<Integer, Character>();
 
+		Thread t = new Thread(new Heartbeat("127.0.0.00",isLeader));
+		t.run();
+		this.gameState = new ConcurrentHashMap<Integer, Character>();
 
 		Character animal = new Animal(2, 500f, 500f, world);
 		gameState.put(animal.getId(), animal);
-		pc = new Player(0, 380f, 350f, world);
-		
+		pc = new Player(0, 350f, 350f, world);
 		gameState.put(pc.getId(), pc);
-		/*updater = new Updater();
-		updater.update(new DataPacket(pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100));
+
+		/*
 		listener = new Listener(gameState, world);
-		listener.initialListen();
+		updater = new Updater();
+
+		if (isLeader) {
+			System.out.println("I am leader in here");
+			listener.initialListen();
+			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100), isLeader);
+		} else {
+			System.out.println("I am not leader in here");
+			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100), isLeader);
+			listener.initialListen();
+		}
 		listener.updateListen();*/
 	}
 
@@ -83,8 +97,8 @@ public class GameScreen implements Screen{
 		new RoomWalls(map, world, "Room Walls");
 		loadRooms();
 	}
-	
-	private void loadRooms() {		
+
+	private void loadRooms() {
 		for (int i = 0; i < rooms.length; i++) {
 			for (MapObject object : map.getLayers().get("Room " + (i + 1)).getObjects().getByType(RectangleMapObject.class)) {
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
@@ -149,10 +163,8 @@ public class GameScreen implements Screen{
 		float dx = pc.getBody().getPosition().x - lastX;
 		float dy = pc.getBody().getPosition().y - lastY;
 
-		/*if (dx != 0 || dy != 0)
-			updater.update(new DataPacket(pc.getId(), dx, dy));
-		*/
-
+		if (dx != 0 || dy != 0)
+			updater.update(new DataPacket(pc.getId(), dx, dy), isLeader);
 
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {

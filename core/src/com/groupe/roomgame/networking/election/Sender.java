@@ -1,4 +1,4 @@
-package com.groupe.roomgame.networking;
+package com.groupe.roomgame.networking.election;
 
 /*
 * @author Dominic Dewhurst
@@ -29,6 +29,9 @@ public class Sender extends Thread {
 	}
 
 	public void run() {
+		if (address.getHostAddress().equals(FindOwnIP.getMyIP()))
+			return;
+
 		try {
 			DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, port);
 			socket.send(packet);
