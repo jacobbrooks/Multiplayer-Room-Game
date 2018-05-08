@@ -22,6 +22,7 @@ public class IPs {
 
 	public static InetAddress[] getIPs;
 	public static String[] getIPsAsString;
+	public static CopyOnWriteArrayList<InetAddress> getIPsAsList;
 
 	public static InetAddress leader;
 
@@ -38,8 +39,9 @@ public class IPs {
 		//getIPs = new InetAddress[]{nuc1, nuc2, nuc3};
 		//getIPsAsString = new String[]{nuc1String, nuc2String, nuc3String};
 		getIPs = new InetAddress[]{nuc1, nuc2};
+		getIPsAsList = new CopyOnWriteArrayList<InetAddress>(getIPs);
 		getIPsAsString = new String[]{nuc1String, nuc2String};
-		needToVote = new CopyOnWriteArrayList<String>(IPs.getIPsAsString);
+		needToVote = new CopyOnWriteArrayList<String>(getIPsAsString);
 		needToVoteStored = new CopyOnWriteArrayList<String>(needToVote);
 	}
 }

@@ -10,7 +10,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import com.groupe.roomgame.networking.election.FindOwnIP;
 
 /**
  * @author manil
@@ -18,21 +20,21 @@ import java.util.ArrayList;
  */
 public class Heartbeat implements Runnable {
 	private static final int port = 2700;
-	private ArrayList<InetAddress> ips;
+	private CopyOnWriteArrayList<InetAddress> ips;
 	private boolean isLeader;
 
-	public Heartbeat(ArrayList<String> ip, boolean leader) {
+	/*public Heartbeat(CopyOnWriteArrayList<String> ip, boolean leader) {
 		ips = Heartbeat.stringToInet(ip);
 		isLeader = leader;
-	}
+	}*/
 
-	public Heartbeat(ArrayList<InetAddress> ip, boolean leader, boolean nothing) {
+	public Heartbeat(CopyOnWriteArrayList<InetAddress> ip, boolean leader) {
 		ips = ip;
 		isLeader = leader;
 	}
 
 	public Heartbeat(String ip, boolean leader) {
-		ips = new ArrayList<InetAddress>();
+		ips = new CopyOnWriteArrayList<InetAddress>();
 			try {
 				ips.add(InetAddress.getByName(ip));
 			} catch (UnknownHostException e) {
@@ -54,7 +56,7 @@ public class Heartbeat implements Runnable {
 					packet = new DatagramPacket(makeHeartBeatPacket(), 1);
 					try {
 						socket.receive(packet);
-						System.out.println("Packet REceived");
+						System.out.println("Packet Received");
 						if (packet.getData()[0] != 100)
 							throw new Error();
 					} catch (SocketTimeoutException se) {
@@ -75,9 +77,11 @@ public class Heartbeat implements Runnable {
 
 				while (!Thread.interrupted()) {
 					for (InetAddress ia : ips) {
-						packet = new DatagramPacket(makeHeartBeatPacket(), 1, ia, port);
-						socket.send(packet);
-						System.out.println("Packet Sent");
+						if (!ia.getHostAddress().equals(FindOwnIP.getMyIP())){
+							packet = new DatagramPacket(makeHeartBeatPacket(), 1, ia, port);
+							socket.send(packet);
+							System.out.println("Packet Sent");
+						}
 					}
 					
 					try {
@@ -97,8 +101,8 @@ public class Heartbeat implements Runnable {
 		return new byte[] { 100 };
 	}
 
-	private static ArrayList<InetAddress> stringToInet(ArrayList<String> strs) {
-		ArrayList<InetAddress> r = new ArrayList<InetAddress>();
+	private static CopyOnWriteArrayList<InetAddress> stringToInet(CopyOnWriteArrayList<String> strs) {
+		CopyOnWriteArrayList<InetAddress> r = new CopyOnWriteArrayList<InetAddress>();
 		for (String str : strs) {
 			try {
 				r.add(InetAddress.getByName(str));

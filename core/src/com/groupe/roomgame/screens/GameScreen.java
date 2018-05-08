@@ -31,6 +31,7 @@ import com.groupe.roomgame.objects.RoomWalls;
 import com.groupe.roomgame.tools.BodyBuilder;
 import com.groupe.roomgame.tools.Constants;
 import com.groupe.roomgame.networking.Heartbeat;
+import com.groupe.roomgame.networking.election.IPs;
 import com.groupe.roomgame.objects.Character;
 import com.groupe.roomgame.objects.Animal;
 
@@ -57,8 +58,9 @@ public class GameScreen implements Screen{
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
 
-		Thread t = new Thread(new Heartbeat("127.0.0.00",isLeader));
+		Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
 		t.run();
+		
 		this.gameState = new ConcurrentHashMap<Integer, Character>();
 
 		Character animal = new Animal(2, 500f, 500f, world);
