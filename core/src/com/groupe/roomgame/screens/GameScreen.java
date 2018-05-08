@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.groupe.roomgame.networking.Listener;
+import com.groupe.roomgame.networking.packets.DataPacket;
 import com.groupe.roomgame.networking.Updater;
 import com.groupe.roomgame.objects.Animal;
 import com.groupe.roomgame.objects.Character;
@@ -64,17 +65,17 @@ public class GameScreen implements Screen{
 		gameState.put(animal.getId(), animal);
 		pc = new Player(0, 350f, 350f, world);
 		gameState.put(pc.getId(), pc);
-		
+
 		listener = new Listener(gameState, world);
 		updater = new Updater();
 
 		if (isLeader) {
 			System.out.println("I am leader in here");
 			listener.initialListen();
-			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100), isLeader);
+			updater.update(new DataPacket(pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100), isLeader);
 		} else {
 			System.out.println("I am not leader in here");
-			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100), isLeader);
+			updater.update(new DataPacket(pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100), isLeader);
 			listener.initialListen();
 		}
 		listener.updateListen();
