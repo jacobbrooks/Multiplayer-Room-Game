@@ -16,17 +16,17 @@ public class Main extends Game {
 	private SpriteBatch batch;
 
 	public void create () {
-		HoldElection election = new HoldElection();
+		/*HoldElection election = new HoldElection();
 		boolean isLeader = false;;
 		
 		try {
 			isLeader = election.start();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		batch = new SpriteBatch();
-		this.setScreen(new GameScreen(batch, isLeader));
+		this.setScreen(new GameScreen(batch, false));
 	}
 
 	public void render () {

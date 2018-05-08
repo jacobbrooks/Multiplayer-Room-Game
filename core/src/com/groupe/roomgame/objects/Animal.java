@@ -14,11 +14,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.groupe.roomgame.tools.BodyBuilder;
 import com.groupe.roomgame.objects.Character;
 
-public class Player extends Character{
+public class Animal extends Character{
 	
-	public Player(int id, float x, float y, World world) {
+	public Animal(int id, float x, float y, World world) {
 		super(id, x, y, world);
-		sprite = new Sprite(new Texture("characters/person.png"));
+		sprite = new Sprite(new Texture("characters/dog"));
 	}
 	
 	public Body getBody() {
