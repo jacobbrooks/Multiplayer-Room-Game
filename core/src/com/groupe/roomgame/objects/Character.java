@@ -1,17 +1,14 @@
 package com.groupe.roomgame.objects;
 
 
-import java.util.concurrent.ConcurrentHashMap;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.groupe.roomgame.tools.BodyBuilder;
+import com.groupe.roomgame.tools.Constants;
 
 public abstract class Character{
 
@@ -19,11 +16,26 @@ public abstract class Character{
 	protected Sprite sprite;
 	protected int id;
 	protected World world;
+	protected byte cBits = Constants.PLAYER_BITS;
+	protected byte mBits = Constants.NON_INTERACTIVE_BITS;
+	protected Rectangle rect;
 
 	public Character(int id, float x, float y, World world){
-		body = BodyBuilder.createCircle(world, BodyType.DynamicBody, x, y, 30);
+		this.rect = new Rectangle(x, y, 64, 64);
+		body = BodyBuilder.createBox(world, BodyType.DynamicBody, rect, cBits, mBits, this);
 		this.id = id;
 		this.world = world;
+	}
+	
+	public void getRoom(Room[] rooms) {
+		for (Room r : rooms) {
+			if (rect.overlaps(r.getRect()))
+				System.out.println(r.getID());
+		}
+	}
+	
+	public void update(float delta) {
+		this.rect.setPosition(body.getPosition().x * 100, body.getPosition().y * 100);
 	}
 
 	public abstract Body getBody();
@@ -35,5 +47,7 @@ public abstract class Character{
 	public abstract void update(float dx, float dy);
 
 	public abstract int getId();
+	
+
 
 }
