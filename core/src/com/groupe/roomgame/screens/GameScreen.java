@@ -50,25 +50,27 @@ public class GameScreen implements Screen{
 		this.rooms = new Room[6];
 		this.gameState = new ConcurrentHashMap<Integer, Character>();
 		
-		pc = new Player(1, 450f, 450f, world);
-		gameState.put(pc.getId(), pc);
 
 		Character animal = new Animal(2, 500f, 500f, world);
 		gameState.put(animal.getId(), animal);
-		
+		pc = new Player(0, gameState, 350f, 350f, world);
+		gameState.put(p.getId(), p);
+    
 		/*
 		listener = new Listener(gameState, world);
 		updater = new Updater();
 
 		if (isLeader) {
+			System.out.println("I am leader in here");
 			listener.initialListen();
 			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
 		} else {
+			System.out.println("I am not leader in here");
 			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
 			listener.initialListen();
 		}
-
 		listener.updateListen();*/
+
 	}
 
 	private void loadMap(String mapName) {
@@ -101,11 +103,14 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		System.out.println(delta);
 		
 		renderer.render();
 		renderer.setView(camera);
 		
 		camera.position.set(pc.getBody().getPosition().x, pc.getBody().getPosition().y, 0);
+
 		camera.update();
 		
 		batch.setProjectionMatrix(camera.combined);
@@ -143,6 +148,7 @@ public class GameScreen implements Screen{
 		/*if (dx != 0 || dy != 0)
 			updater.update(new DataPacket(pc.getId(), dx, dy));
 		*/
+
 		
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
