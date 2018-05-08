@@ -64,8 +64,7 @@ public class GameScreen implements Screen{
 		gameState.put(animal.getId(), animal);
 		pc = new Player(0, 350f, 350f, world);
 		gameState.put(pc.getId(), pc);
-
-		/*
+		
 		listener = new Listener(gameState, world);
 		updater = new Updater();
 
@@ -78,7 +77,7 @@ public class GameScreen implements Screen{
 			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100), isLeader);
 			listener.initialListen();
 		}
-		listener.updateListen();*/
+		listener.updateListen();
 	}
 
 	private void loadMap(String mapName) {
