@@ -23,6 +23,7 @@ import com.groupe.roomgame.objects.Player;
 import com.groupe.roomgame.objects.Room;
 import com.groupe.roomgame.objects.RoomWalls;
 import com.groupe.roomgame.tools.Constants;
+import com.groupe.roomgame.networking.Heartbeat; 
 
 public class GameScreen implements Screen{
 
@@ -47,6 +48,9 @@ public class GameScreen implements Screen{
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
 		this.gameState = new ConcurrentHashMap<Integer, Player>();
+
+		Thread t = new Thread(new Heartbeat("127.0.0.00",isLeader));
+		t.run();
 		
 		p = new Player(0, gameState, 350f, 350f, world);
 		gameState.put(p.getId(), p);
@@ -57,10 +61,10 @@ public class GameScreen implements Screen{
 		if (isLeader) {
 			System.out.println("I am leader in here");
 			listener.initialListen();
-			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
+			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100), isLeader);
 		} else {
 			System.out.println("I am not leader in here");
-			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100));
+			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100), isLeader);
 			listener.initialListen();
 		}
 
@@ -139,7 +143,7 @@ public class GameScreen implements Screen{
 		float dy = p.getBody().getPosition().y - lastY;
 						
 		if (dx != 0 || dy != 0)
-			updater.update(new DataPacket(p.getId(), dx, dy));
+			updater.update(new DataPacket(p.getId(), dx, dy), isLeader);
 		
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {

@@ -31,13 +31,23 @@ public class Heartbeat implements Runnable {
 		isLeader = leader;
 	}
 
+	public Heartbeat(String ip, boolean leader) {
+		ips = new ArrayList<InetAddress>();
+			try {
+				ips.add(InetAddress.getByName(ip));
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+		isLeader = leader;
+	}
+
 	public void run() {
 		if (!isLeader) {
 			DatagramSocket socket = null;
 			try {
 				socket = new DatagramSocket(port);
 				DatagramPacket packet;
-				socket.setSoTimeout(3000);
+				socket.setSoTimeout(100);
 
 				int timeouts = 0;
 				while (!Thread.interrupted()) {
@@ -71,7 +81,7 @@ public class Heartbeat implements Runnable {
 					}
 					
 					try {
-						Thread.sleep(1500);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

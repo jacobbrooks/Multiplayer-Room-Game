@@ -8,19 +8,20 @@ import java.io.IOException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.groupe.roomgame.networking.HoldElection;
-import com.groupe.roomgame.networking.IPs;
+
 import com.groupe.roomgame.screens.GameScreen;
+import com.groupe.roomgame.networking.election.HoldElection;
+import com.groupe.roomgame.networking.election.IPs;
 
 public class Main extends Game {
 	private SpriteBatch batch;
 
 	public void create () {
-		HoldElection election = new HoldElection();
-		boolean isLeader = false;;
+		boolean isLeader = false;
 		
 		try {
-			isLeader = election.start();
+			HoldElection election = new HoldElection(2703);
+			isLeader = election.run();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

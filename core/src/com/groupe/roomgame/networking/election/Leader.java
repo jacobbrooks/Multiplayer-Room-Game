@@ -1,4 +1,4 @@
-package com.groupe.roomgame.networking.states;
+package com.groupe.roomgame.networking.election;
 
 /*
 * @author Dominic Dewhurst
@@ -6,8 +6,6 @@ package com.groupe.roomgame.networking.states;
 
 import java.io.IOException;
 
-import com.groupe.roomgame.networking.IPs;
-import com.groupe.roomgame.networking.Sender;
 import com.groupe.roomgame.networking.packets.ConfirmationPacket;
 
 public class Leader {

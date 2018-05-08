@@ -15,16 +15,17 @@ public class VotePacket extends ElectionPacket {
 	private byte votedFor;
 	
 	/* create new vote packet */
-	public VotePacket(byte votedFor){
+	public VotePacket(byte votedFor, int term){
 		this.opCode = 1;
-		this.size = 2 * (Byte.SIZE / 8);
+		this.term = term;
+		this.size = 2 * (Byte.SIZE / 8) + (Integer.SIZE / 8);
 		this.votedFor = votedFor;
 		
 		this.packet = new byte[size];
 
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 		buffer.mark();
-		buffer.put(opCode).put(votedFor).reset();
+		buffer.put(opCode).put(votedFor).putInt(term).reset();
 		buffer.get(packet);
 	}
 

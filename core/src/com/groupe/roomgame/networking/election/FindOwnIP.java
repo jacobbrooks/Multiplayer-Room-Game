@@ -3,7 +3,7 @@
  * Apr 26, 2018
  */
 
-package com.groupe.roomgame.networking;
+package com.groupe.roomgame.networking.election;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
