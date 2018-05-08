@@ -3,6 +3,7 @@ package com.groupe.roomgame.networking;
 import java.net.*;
 import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
+import com.groupe.roomgame.objects.Character;
 import com.groupe.roomgame.objects.Player;
 import com.badlogic.gdx.physics.box2d.World;
 import java.nio.ByteBuffer;
@@ -10,10 +11,10 @@ import java.nio.ByteBuffer;
 public class Listener{
 
 	private DatagramSocket socket;
-	private ConcurrentHashMap<Integer, Player> gameState;
+	private ConcurrentHashMap<Integer, Character> gameState;
 	private World world;
 
-	public Listener(ConcurrentHashMap<Integer, Player> gameState, World world){
+	public Listener(ConcurrentHashMap<Integer, Character> gameState, World world){
 		this.gameState = gameState;
 		this.world = world;
 		try{
@@ -33,8 +34,8 @@ public class Listener{
 			int id = byteBuffer.getInt();
 			float x = byteBuffer.getFloat();
 			float y = byteBuffer.getFloat();
-			Player p = new Player(id, gameState, x, y, world);
-			gameState.put(id, p);
+			Character c = new Player(id, x, y, world);
+			gameState.put(id, c);
 		}catch(IOException e){
 			e.printStackTrace();
 		}

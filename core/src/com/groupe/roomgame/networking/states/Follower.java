@@ -42,13 +42,13 @@ public class Follower {
 		System.out.println(socket.getSoTimeout());
 	}
 
-	public void run() throws IOException {
+	public boolean run() throws IOException {
 		while (running){
 			try {
 				if (isCandidate){
 					System.out.println("I became a candidate.");
 					if (new Candidate(votePort).receiveVotes())
-						new Leader().sendConfirmations();	
+						return new Leader().sendConfirmations();	
 				}
 
 				byte[] buffer = new byte[256];
@@ -66,8 +66,7 @@ public class Follower {
 						break;
 					case 2:
 						System.out.println("Leader has been elected: " + leader.getHostAddress());
-						running = false;
-						break;
+						return false;
 				}
 			} catch (SocketTimeoutException e){
 				if(!isCandidate)
@@ -78,6 +77,8 @@ public class Follower {
 				ex.printStackTrace();
 			}
 		}
+		
+		return false;
 	}
 
 	/* received candidacy packets before timeout */

@@ -24,7 +24,7 @@ public class IPs {
 	}
 
 	public static void set3() throws IOException {
-		nuc3 = InetAddress.getByName("129.3.20.63");
-		getIPs = new InetAddress[]{nuc1, nuc2, nuc3};
+		//nuc3 = InetAddress.getByName("129.3.20.63");
+		getIPs = new InetAddress[]{nuc1, nuc2};
 	}
 }
