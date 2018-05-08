@@ -24,6 +24,8 @@ import com.groupe.roomgame.objects.Room;
 import com.groupe.roomgame.objects.RoomWalls;
 import com.groupe.roomgame.tools.Constants;
 import com.groupe.roomgame.networking.Heartbeat; 
+import com.groupe.roomgame.objects.Character;
+import com.groupe.roomgame.objects.Animal;
 
 public class GameScreen implements Screen{
 
@@ -34,11 +36,11 @@ public class GameScreen implements Screen{
 	private SpriteBatch batch;
 	private World world;
 	private Room[] rooms;
-	private Player p;
+	private Character pc;
 	private Listener listener;
 	private Updater updater;
 	
-	private ConcurrentHashMap<Integer, Player> gameState;
+	private ConcurrentHashMap<Integer, Character> gameState;
 	private boolean isLeader;
 
 	public GameScreen(SpriteBatch batch, boolean isLeader){
@@ -47,14 +49,17 @@ public class GameScreen implements Screen{
 		this.world = new World(new Vector2(0, 0), true);
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
-		this.gameState = new ConcurrentHashMap<Integer, Player>();
 
 		Thread t = new Thread(new Heartbeat("127.0.0.00",isLeader));
 		t.run();
-		
-		p = new Player(0, gameState, 350f, 350f, world);
-		gameState.put(p.getId(), p);
-		
+		this.gameState = new ConcurrentHashMap<Integer, Character>();		
+
+		Character animal = new Animal(2, 500f, 500f, world);
+		gameState.put(animal.getId(), animal);
+		pc = new Player(0, 350f, 350f, world);
+		gameState.put(pc.getId(), pc);
+    
+		/*
 		listener = new Listener(gameState, world);
 		updater = new Updater();
 
@@ -67,8 +72,8 @@ public class GameScreen implements Screen{
 			updater.update(new DataPacket(p.getId(), p.getBody().getPosition().x * 100, p.getBody().getPosition().y * 100), isLeader);
 			listener.initialListen();
 		}
+		listener.updateListen();*/
 
-		listener.updateListen();
 	}
 
 	private void loadMap(String mapName) {
@@ -107,47 +112,48 @@ public class GameScreen implements Screen{
 		renderer.render();
 		renderer.setView(camera);
 		
-		camera.position.set(p.getBody().getPosition().x, p.getBody().getPosition().y, 0);
+		camera.position.set(pc.getBody().getPosition().x, pc.getBody().getPosition().y, 0);
+
 		camera.update();
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
-		float lastX = p.getBody().getPosition().x;
-		float lastY = p.getBody().getPosition().y;
+		float lastX = pc.getBody().getPosition().x;
+		float lastY = pc.getBody().getPosition().y;
 		
-		float lastVelX = p.getBody().getLinearVelocity().x;
-		float lastVelY = p.getBody().getLinearVelocity().y;
+		float lastVelX = pc.getBody().getLinearVelocity().x;
+		float lastVelY = pc.getBody().getLinearVelocity().y;
 		
-		p.getBody().setLinearVelocity(new Vector2(0f, 0f));
+		pc.getBody().setLinearVelocity(new Vector2(0f, 0f));
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-			p.getBody().setLinearVelocity(new Vector2(-1f, 0f));
-			p.getSprite().setRotation((float) Math.toDegrees(Math.PI));
+			pc.getBody().setLinearVelocity(new Vector2(-1f, 0f));
+			pc.getSprite().setRotation((float) Math.toDegrees(Math.PI));
 		}
 		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
-			p.getBody().setLinearVelocity(new Vector2(1f, 0f));
-			p.getSprite().setRotation((float) 0f);
+			pc.getBody().setLinearVelocity(new Vector2(1f, 0f));
+			pc.getSprite().setRotation((float) 0f);
 		}
 		if(Gdx.input.isKeyPressed(Keys.UP)){
-			p.getBody().setLinearVelocity(new Vector2(0f, 1f));
-			p.getSprite().setRotation((float) Math.toDegrees(Math.PI / 2));
+			pc.getBody().setLinearVelocity(new Vector2(0f, 1f));
+			pc.getSprite().setRotation((float) Math.toDegrees(Math.PI / 2));
 		}
 		if(Gdx.input.isKeyPressed(Keys.DOWN)){
-			p.getBody().setLinearVelocity(new Vector2(0f, -1f));
-			p.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
+			pc.getBody().setLinearVelocity(new Vector2(0f, -1f));
+			pc.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
 		
 		world.step(1/60f, 8, 3);
 
-		float dx = p.getBody().getPosition().x - lastX;
-		float dy = p.getBody().getPosition().y - lastY;
+		float dx = pc.getBody().getPosition().x - lastX;
+		float dy = pc.getBody().getPosition().y - lastY;
 						
 		if (dx != 0 || dy != 0)
-			updater.update(new DataPacket(p.getId(), dx, dy), isLeader);
+			updater.update(new DataPacket(pc.getId(), dx, dy), isLeader);
 		
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
-			Player tmp = gameState.get(it.next());
+			Character tmp = gameState.get(it.next());
 			tmp.render(batch);
 		}
 		

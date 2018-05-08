@@ -18,7 +18,7 @@ public class Main extends Game {
 
 	public void create () {
 		boolean isLeader = false;
-		
+
 		try {
 			HoldElection election = new HoldElection(2703);
 			isLeader = election.run();
