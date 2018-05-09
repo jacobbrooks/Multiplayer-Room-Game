@@ -195,6 +195,8 @@ public class GameScreen implements Screen{
 				HoldElection election = new HoldElection(2703);
 				isLeader = election.run();
 				leaderIsDead = false;
+				Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
+				t.start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
