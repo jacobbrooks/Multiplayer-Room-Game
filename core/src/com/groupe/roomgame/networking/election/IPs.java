@@ -39,12 +39,12 @@ public class IPs {
 	}
 
 	public static void set3() throws IOException {
-		nuc3 = InetAddress.getByName(nuc3String);
-		getIPs = new InetAddress[]{nuc1, nuc2, nuc3};
-		getIPsAsString = new String[]{nuc1String, nuc2String, nuc3String};
-		//getIPs = new InetAddress[]{nuc1, nuc7};
+		//nuc3 = InetAddress.getByName(nuc3String);
+		//getIPs = new InetAddress[]{nuc1, nuc2, nuc3};
+		//getIPsAsString = new String[]{nuc1String, nuc2String, nuc3String};
+		getIPs = new InetAddress[]{nuc1, nuc2};
 		getIPsAsList = new CopyOnWriteArrayList<InetAddress>(getIPs);
-		//getIPsAsString = new String[]{nuc1String, nuc7String};
+		getIPsAsString = new String[]{nuc1String, nuc2String};
 		needToVote = new CopyOnWriteArrayList<String>(getIPsAsString);
 		needToVoteStored = new CopyOnWriteArrayList<String>(needToVote);
 	}

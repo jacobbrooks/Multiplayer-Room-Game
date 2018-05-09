@@ -26,6 +26,7 @@ public class Listener {
 		this.world = world;
 		try {
 			socket = new DatagramSocket(6145);
+			socket.setSoTimeout(500);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}

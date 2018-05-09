@@ -85,7 +85,8 @@ public class GameScreen implements Screen{
 		if (isLeader) {
 			System.out.println("I am leader in here");
 			
-			listener.initialListen();
+			for (int i = 0; i < IPs.getIPs.length - 1; i++)
+				listener.initialListen();
 			
 			myPlayerInitPacket.createCharacterInitPacket(Character.PC, pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100);
 			updater.update(myPlayerInitPacket, isLeader);
