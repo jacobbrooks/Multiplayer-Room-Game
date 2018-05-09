@@ -24,7 +24,7 @@ public class DataPacket {
 	 * Character initialization packet : CHARACTER_INIT
 	 */
 	public void createInitPacket(Room[] rooms, ConcurrentHashMap<Integer, Character> gameState) {
-		int charCount = gameState.keySet().size() + IPs.getIPs.length;
+		int charCount = gameState.keySet().size();
 		int numInts = 2 * (Integer.SIZE / 8);
 		int numFloats = 2 * (Float.SIZE / 8);
 		int numRooms = rooms.length;

@@ -60,7 +60,7 @@ public class Listener {
 
 		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);		
 
-		for (int i = 0; i < 15 + (IPs.getIPs.length); i++){
+		for (int i = 0; i < 15 + IPs.getIPs.length; i++){
 			int type = byteBuffer.getInt();
 			int id = byteBuffer.getInt();
 			float x = byteBuffer.getFloat();
