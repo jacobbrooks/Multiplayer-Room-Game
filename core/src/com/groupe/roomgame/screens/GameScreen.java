@@ -1,6 +1,7 @@
 package com.groupe.roomgame.screens;
 
 import java.util.Iterator;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.Gdx;
@@ -25,6 +26,7 @@ import com.groupe.roomgame.networking.Updater;
 import com.groupe.roomgame.objects.Animal;
 import com.groupe.roomgame.objects.Character;
 import com.groupe.roomgame.objects.Hallway;
+import com.groupe.roomgame.objects.NPC;
 import com.groupe.roomgame.objects.Player;
 import com.groupe.roomgame.objects.Room;
 import com.groupe.roomgame.objects.RoomWalls;
@@ -50,6 +52,8 @@ public class GameScreen implements Screen{
 
 	private ConcurrentHashMap<Integer, Character> gameState;
 	private boolean isLeader;
+	
+	private Random r;
 
 	public GameScreen(SpriteBatch batch, boolean isLeader){
 		this.batch = batch;
@@ -58,29 +62,91 @@ public class GameScreen implements Screen{
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
 
-		Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
-		t.start();
+		/*Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
+		t.start();*/
 		
 		this.gameState = new ConcurrentHashMap<Integer, Character>();
+		
+		r = new Random();
 
-		Character animal = new Animal(2, 500f, 500f, world);
-		gameState.put(animal.getId(), animal);
-		pc = new Player(0, 350f, 350f, world);
+		float[] pcCoordinates = randomRoomCoordinates();
+		pc = new Player(r.nextInt(10000), pcCoordinates[0], pcCoordinates[1], world);
 		gameState.put(pc.getId(), pc);
+		
+		loadCamera();
+		loadMap("map/map.tmx");
+		loadObjects();
 
-		listener = new Listener(gameState, world);
+		listener = new Listener(gameState, rooms, world, isLeader);
 		updater = new Updater();
 
+		DataPacket myPlayerInitPacket = new DataPacket();
+		
 		if (isLeader) {
 			System.out.println("I am leader in here");
+			
 			listener.initialListen();
-			updater.update(new DataPacket(pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100), isLeader);
+			
+			myPlayerInitPacket.createCharacterInitPacket(Character.PC, pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100);
+			updater.update(myPlayerInitPacket, isLeader);
+			
+			Character[] generatedCharacters = generateCharacters();
+			for(Character c : generatedCharacters) {
+				gameState.put(c.getId(), c);
+				DataPacket characterInitPacket = new DataPacket();
+				characterInitPacket.createCharacterInitPacket(c.getType(), c.getId(), c.getBody().getPosition().x * 100, c.getBody().getPosition().y * 100);
+				updater.update(characterInitPacket, isLeader);
+			}
+			
+			for(Room room : rooms) {
+				room.setRoomState(r.nextInt(3));
+				DataPacket roomUpdatePacket = new DataPacket();
+				roomUpdatePacket.createRoomUpdatePacket(room.getID(), room.getRoomState());
+				updater.update(roomUpdatePacket, isLeader);
+			}
+					
 		} else {
-			System.out.println("I am not leader in here");
-			updater.update(new DataPacket(pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100), isLeader);
+			System.out.println("I am not the leader in here");
+			myPlayerInitPacket.createCharacterInitPacket(Character.PC, pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100);
+			updater.update(myPlayerInitPacket, isLeader);
 			listener.initialListen();
 		}
+		
 		listener.updateListen();
+	}
+	
+	private Character[] generateCharacters() {
+		Character[] characters = new Character[20];
+		for(int i = 0; i < 20; i++) {
+			boolean animal = r.nextBoolean();
+			
+			float[] roomCoordinates = randomRoomCoordinates();
+			
+			int ranID = r.nextInt(10000);
+			
+			Character c;
+			if(animal) {
+				c = new Animal(ranID, roomCoordinates[0], roomCoordinates[1], world);
+			}else {
+				c = new NPC(ranID, roomCoordinates[0], roomCoordinates[1], world);
+			}
+			characters[i] = c;
+		}	
+		return characters;
+	}
+	
+	private float[] randomRoomCoordinates() {
+		int randomRoom = r.nextInt(6);
+		
+		float roomPosX = rooms[randomRoom].getRect().x;
+		float roomPosY = rooms[randomRoom].getRect().y;
+		float roomWidth = rooms[randomRoom].getRect().width;
+		float roomHeight = rooms[randomRoom].getRect().height;
+		
+		float ranX = r.nextInt((int) roomWidth) + roomPosX - 64;
+		float ranY = r.nextInt((int) roomHeight) + roomPosY - 64;
+		
+		return new float[]{ranX, ranY};
 	}
 
 	private void loadMap(String mapName) {
@@ -112,9 +178,7 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void show() {
-		loadCamera();
-		loadMap("map/map.tmx");
-		loadObjects();
+	
 	}
 
 
@@ -165,8 +229,9 @@ public class GameScreen implements Screen{
 		float dx = pc.getBody().getPosition().x - lastX;
 		float dy = pc.getBody().getPosition().y - lastY;
 
-		if (dx != 0 || dy != 0)
+		/*if (dx != 0 || dy != 0)
 			updater.update(new DataPacket(pc.getId(), dx, dy), isLeader);
+			*/
 
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {

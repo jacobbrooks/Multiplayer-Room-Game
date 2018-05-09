@@ -6,14 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Player extends Character{
+public class NPC extends Character{
 	
-	private int respect;
-	
-	public Player(int id, float x, float y, World world) {
+	public NPC(int id, float x, float y, World world) {
 		super(id, x, y, world);
-		sprite = new Sprite(new Texture("characters/person.png"));
-		respect = 40;
+		sprite = new Sprite(new Texture("characters/npc.png"));
 	}
 	
 	public Body getBody() {
@@ -27,15 +24,12 @@ public class Player extends Character{
 	public void render(SpriteBatch sb) {
 		sprite.setPosition((float)(body.getPosition().x - sprite.getWidth() / 2), (float)(body.getPosition().y - sprite.getHeight() / 2));
 		sprite.setOriginCenter();
-		sprite.setSize(1, 1);
+		sprite.setSize(.7f, .7f);
 		sprite.draw(sb);
 	}
 
 	public void update(float dx, float dy){
-		if(!world.isLocked()){
-			body.setTransform(body.getPosition().x + dx, body.getPosition().y + dy, 0f);
-			body.setAwake(true);
-		}
+		//other stuff
 	}
 	
 	public int getId() {
@@ -43,15 +37,7 @@ public class Player extends Character{
 	}
 	
 	public int getType() {
-		return PC;
-	}
-	
-	public int getRespect() {
-		return respect;
-	}
-	
-	public void setRespect(int respect) {
-		this.respect = respect;
+		return NPC;
 	}
 
 }

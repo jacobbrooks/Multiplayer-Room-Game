@@ -46,5 +46,9 @@ public class Animal extends Character{
 	public int getId() {
 		return id;
 	}
+	
+	public int getType() {
+		return ANIMAL;
+	}
 
 }
