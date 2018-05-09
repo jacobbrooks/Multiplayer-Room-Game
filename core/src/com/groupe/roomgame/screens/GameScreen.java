@@ -229,9 +229,12 @@ public class GameScreen implements Screen{
 		float dx = pc.getBody().getPosition().x - lastX;
 		float dy = pc.getBody().getPosition().y - lastY;
 
-		/*if (dx != 0 || dy != 0)
-			updater.update(new DataPacket(pc.getId(), dx, dy), isLeader);
-			*/
+		if (dx != 0 || dy != 0){
+			DataPacket packet = new DataPacket();
+			packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), dx, dy);
+			updater.update(packet, isLeader);
+		}
+			
 
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {

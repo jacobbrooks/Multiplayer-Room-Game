@@ -8,12 +8,9 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Player extends Character{
 	
-	private int respect;
-	
 	public Player(int id, float x, float y, World world) {
 		super(id, x, y, world);
 		sprite = new Sprite(new Texture("characters/person.png"));
-		respect = 40;
 	}
 	
 	public Body getBody() {
@@ -45,7 +42,7 @@ public class Player extends Character{
 	public int getType() {
 		return PC;
 	}
-	
+
 	public int getRespect() {
 		return respect;
 	}
@@ -54,4 +51,5 @@ public class Player extends Character{
 		this.respect = respect;
 	}
 
+	
 }

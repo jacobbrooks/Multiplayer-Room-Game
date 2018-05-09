@@ -19,12 +19,12 @@ public class Main extends Game {
 	public void create () {
 		boolean isLeader = false;
 
-		/*try {
+		try {
 			HoldElection election = new HoldElection(2703);
 			isLeader = election.run();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 		
 		batch = new SpriteBatch();
 		this.setScreen(new GameScreen(batch, isLeader));

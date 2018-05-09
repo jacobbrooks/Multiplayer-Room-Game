@@ -40,4 +40,13 @@ public class NPC extends Character{
 		return NPC;
 	}
 
+	public int getRespect() {
+		return respect;
+	}
+	
+	public void setRespect(int respect) {
+		this.respect = respect;
+	}
+
+
 }

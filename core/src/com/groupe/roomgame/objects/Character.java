@@ -23,12 +23,14 @@ public abstract class Character{
 	protected byte cBits = Constants.PLAYER_BITS;
 	protected byte mBits = Constants.NON_INTERACTIVE_BITS;
 	protected Rectangle rect;
+	protected int respect;
 
 	public Character(int id, float x, float y, World world){
 		this.rect = new Rectangle(x, y, 64, 64);
 		body = BodyBuilder.createBox(world, BodyType.DynamicBody, rect, cBits, mBits, this);
 		this.id = id;
 		this.world = world;
+		respect = 40;
 	}
 	
 	public void getRoom(Room[] rooms) {
@@ -55,5 +57,10 @@ public abstract class Character{
 	public abstract int getId();
 	
 	public abstract int getType();
+
+	public abstract int getRespect();
+	
+	public abstract void setRespect(int respect);
+
 	
 }

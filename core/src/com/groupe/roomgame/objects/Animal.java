@@ -51,4 +51,13 @@ public class Animal extends Character{
 		return ANIMAL;
 	}
 
+	public int getRespect() {
+		return respect;
+	}
+	
+	public void setRespect(int respect) {
+		this.respect = respect;
+	}
+
+
 }
