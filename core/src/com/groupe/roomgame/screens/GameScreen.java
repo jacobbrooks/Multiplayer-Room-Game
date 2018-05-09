@@ -225,7 +225,7 @@ public class GameScreen implements Screen{
 		}*/
 
 		DataPacket packet = new DataPacket();
-		packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), pc.getBody.getPosition().x, pc.getBody.getPosition().y);
+		packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), pc.getBody().getPosition().x, pc.getBody().getPosition().y);
 		updater.update(packet, isLeader);
 			
 
