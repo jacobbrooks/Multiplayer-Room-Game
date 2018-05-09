@@ -36,7 +36,7 @@ public class Updater {
 				socket.send(dgPacket);
 			}
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 	}
 }

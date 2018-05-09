@@ -11,7 +11,11 @@ import com.groupe.roomgame.tools.BodyBuilder;
 import com.groupe.roomgame.tools.Constants;
 
 public abstract class Character{
-
+	
+	public static final int PC = 0;
+	public static final int ANIMAL = 1;
+	public static final int NPC = 2;
+	
 	protected Body body;
 	protected Sprite sprite;
 	protected int id;
@@ -29,8 +33,10 @@ public abstract class Character{
 	
 	public void getRoom(Room[] rooms) {
 		for (Room r : rooms) {
-			if (rect.overlaps(r.getRect()))
+			if (rect.overlaps(r.getRect())) {
 				System.out.println(r.getID());
+				System.out.println("State: " + r.getRoomState());
+			}
 		}
 	}
 	
@@ -48,6 +54,6 @@ public abstract class Character{
 
 	public abstract int getId();
 	
-
-
+	public abstract int getType();
+	
 }
