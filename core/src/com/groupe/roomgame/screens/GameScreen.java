@@ -3,6 +3,7 @@ package com.groupe.roomgame.screens;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
@@ -184,6 +185,8 @@ public class GameScreen implements Screen{
 			try {
 				System.out.println("Leader died holding new election.");
 				IPs.getIPsAsList.remove(IPs.leader.getHostAddress());
+				IPs.needToVote = new CopyOnWriteArrayList<String>(IPs.getIPsAsString);
+				IPs.needToVoteStored = new CopyOnWriteArrayList<String>(IPs.needToVote);
 				HoldElection election = new HoldElection(2703);
 				isLeader = election.run();
 				leaderIsDead = false;
