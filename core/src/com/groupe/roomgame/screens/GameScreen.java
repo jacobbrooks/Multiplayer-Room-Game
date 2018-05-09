@@ -59,7 +59,7 @@ public class GameScreen implements Screen{
 		this.rooms = new Room[6];
 
 		Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
-		t.run();
+		t.start();
 		
 		this.gameState = new ConcurrentHashMap<Integer, Character>();
 

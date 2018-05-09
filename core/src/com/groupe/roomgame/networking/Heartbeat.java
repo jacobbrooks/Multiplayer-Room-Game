@@ -77,6 +77,7 @@ public class Heartbeat implements Runnable {
 
 				while (!Thread.interrupted()) {
 					for (InetAddress ia : ips) {
+						System.out.println(ia.getHostAddress());
 						if (!ia.getHostAddress().equals(FindOwnIP.getMyIP())){
 							packet = new DatagramPacket(makeHeartBeatPacket(), 1, ia, port);
 							socket.send(packet);
