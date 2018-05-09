@@ -247,6 +247,7 @@ public class GameScreen implements Screen{
 			tmp.render(batch);
 		}
 
+		System.out.println(gameState.keySet().size());
 		batch.end();
 
 		debug.render(world, camera.combined);

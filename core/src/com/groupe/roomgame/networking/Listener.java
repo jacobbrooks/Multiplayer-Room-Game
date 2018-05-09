@@ -91,7 +91,9 @@ public class Listener {
 		int id = byteBuffer.getInt();
 		float x = byteBuffer.getFloat();
 		float y = byteBuffer.getFloat();
-		addCharacter(type, id, x, y);
+
+		if (!gameState.containsKey(id))
+			addCharacter(type, id, x, y);
 		return true;
 	}
 	
