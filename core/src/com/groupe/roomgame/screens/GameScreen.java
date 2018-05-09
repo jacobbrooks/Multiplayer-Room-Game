@@ -110,6 +110,8 @@ public class GameScreen implements Screen{
 			System.out.println("I am not the leader in here");
 			myPlayerInitPacket.createCharacterInitPacket(Character.PC, pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100);
 			updater.update(myPlayerInitPacket, isLeader);
+			listener.setInitPacket(myPlayerInitPacket);
+			listener.setUpdater(updater);
 			listener.initialListen();
 		}
 		
