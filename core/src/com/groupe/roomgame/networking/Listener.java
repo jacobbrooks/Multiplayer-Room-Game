@@ -104,7 +104,9 @@ public class Listener {
 					try {
 						socket.receive(packet);
 						ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+						int packetType = byteBuffer.getInt();
 						int id = byteBuffer.getInt();
+						int respect = byteBuffer.getInt();
 						float dx = byteBuffer.getFloat();
 						float dy = byteBuffer.getFloat();
 						// System.out.println("vx: " + vx + ", vy: " + vy);
