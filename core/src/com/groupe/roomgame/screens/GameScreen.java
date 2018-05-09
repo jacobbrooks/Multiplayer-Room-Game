@@ -68,14 +68,14 @@ public class GameScreen implements Screen{
 		this.gameState = new ConcurrentHashMap<Integer, Character>();
 		
 		r = new Random();
+		loadCamera();
+		loadMap("map/map.tmx");
+		loadObjects();
 
 		float[] pcCoordinates = randomRoomCoordinates();
 		pc = new Player(r.nextInt(10000), pcCoordinates[0], pcCoordinates[1], world);
 		gameState.put(pc.getId(), pc);
 		
-		loadCamera();
-		loadMap("map/map.tmx");
-		loadObjects();
 
 		listener = new Listener(gameState, rooms, world, isLeader);
 		updater = new Updater();
