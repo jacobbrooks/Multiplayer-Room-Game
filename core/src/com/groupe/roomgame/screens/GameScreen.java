@@ -89,7 +89,6 @@ public class GameScreen implements Screen{
 			for (int i = 0; i < IPs.getIPs.length - 1; i++)
 				listener.initialListen();
 			
-			System.out.println("Got init character packets.");
 			updater.update(initPacket, isLeader);
 		} else {
 			System.out.println("I am not the leader in here");
@@ -219,11 +218,15 @@ public class GameScreen implements Screen{
 		float dx = pc.getBody().getPosition().x - lastX;
 		float dy = pc.getBody().getPosition().y - lastY;
 
-		if (dx != 0 || dy != 0){
+		/*if (dx != 0 || dy != 0){
 			DataPacket packet = new DataPacket();
 			packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), dx, dy);
 			updater.update(packet, isLeader);
-		}
+		}*/
+
+		DataPacket packet = new DataPacket();
+		packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), pc.getBody.getPosition().x, pc.getBody.getPosition().y);
+		updater.update(packet, isLeader);
 			
 
 		Iterator<Integer> it = gameState.keySet().iterator();

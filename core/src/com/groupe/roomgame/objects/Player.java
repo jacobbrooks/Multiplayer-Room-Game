@@ -28,9 +28,9 @@ public class Player extends Character{
 		sprite.draw(sb);
 	}
 
-	public void update(float dx, float dy){
+	public void update(float x, float y){
 		if(!world.isLocked()){
-			body.setTransform(body.getPosition().x + dx, body.getPosition().y + dy, 0f);
+			body.setTransform(x, y, 0f);
 			body.setAwake(true);
 		}
 	}
