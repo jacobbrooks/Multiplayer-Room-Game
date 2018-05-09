@@ -34,10 +34,15 @@ public class VotePacket extends ElectionPacket {
 		ByteBuffer buffer = ByteBuffer.wrap(receivedPacket);
 		this.opCode = buffer.get();
 		this.votedFor = buffer.get();
+		this.term = buffer.getInt();
 	}
 
 	/* return a 1 if candidate was voted for, 0 otherwise */
 	public byte wasVotedFor(){
 		return this.votedFor;
+	}
+
+	public String toSring(){
+		return "opCode: " + opCode + " term: " + term + " vote: " + votedFor;
 	}
 }

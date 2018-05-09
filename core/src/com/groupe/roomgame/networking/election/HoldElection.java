@@ -66,7 +66,7 @@ public class HoldElection {
 					case 1:
 						IPs.needToVote.remove(packet.getAddress().getHostAddress());
 						VotePacket vote = new VotePacket(packet.getData());
-						System.out.println("Current Term: " + currentTerm + " - Received vote packet (" + vote + ") from " + packet.getAddress().getHostAddress());
+						System.out.println("Current Term: " + currentTerm + " - Received vote packet (" + vote + " vote: " + vote.wasVotedFor() + ") from " + packet.getAddress().getHostAddress());
 						if (vote.wasVotedFor() == 1 && vote.getTerm() == currentTerm)
 							votes.getAndIncrement();
 						break;
@@ -108,7 +108,7 @@ public class HoldElection {
 		VotePacket vote = new VotePacket(votedFor, currentTerm);
 		DatagramPacket votePacket = new DatagramPacket(vote.getPacket(), vote.getPacket().length, canidate, port);
 		socket.send(votePacket);
-		System.out.println("Sent vote packet (" + vote + ") to: " + ip);
+		System.out.println("Sent vote packet (" + vote + " vote: " + vote.wasVotedFor() + ") to: " + ip);
 	}
 
 	public void becomeCandidate() throws IOException {
