@@ -75,12 +75,11 @@ public class GameScreen implements Screen{
 		float[] pcCoordinates = randomRoomCoordinates();
 		pc = new Player(r.nextInt(10000), pcCoordinates[0], pcCoordinates[1], world);
 		gameState.put(pc.getId(), pc);
-		
 
 		listener = new Listener(gameState, rooms, world, isLeader);
 		updater = new Updater();
 
-		DataPacket myPlayerInitPacket = new DataPacket();
+		DataPacket initPacket = new DataPacket();
 		
 		if (isLeader) {
 			System.out.println("I am leader in here");
@@ -88,29 +87,16 @@ public class GameScreen implements Screen{
 			for (int i = 0; i < IPs.getIPs.length - 1; i++)
 				listener.initialListen();
 			
-			myPlayerInitPacket.createCharacterInitPacket(Character.PC, pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100);
-			updater.update(myPlayerInitPacket, isLeader);
-			
 			Character[] generatedCharacters = generateCharacters();
-			for(Character c : generatedCharacters) {
-				gameState.put(c.getId(), c);
-				DataPacket characterInitPacket = new DataPacket();
-				characterInitPacket.createCharacterInitPacket(c.getType(), c.getId(), c.getBody().getPosition().x * 100, c.getBody().getPosition().y * 100);
-				updater.update(characterInitPacket, isLeader);
-			}
-			
-			for(Room room : rooms) {
-				room.setRoomState(r.nextInt(3));
-				DataPacket roomUpdatePacket = new DataPacket();
-				roomUpdatePacket.createRoomUpdatePacket(room.getID(), room.getRoomState());
-				updater.update(roomUpdatePacket, isLeader);
-			}
-					
+			initPacket.createInitPacket(pc, generatedCharacters, rooms, gameState);
+			updater.update(initPacket, isLeader);
+
 		} else {
 			System.out.println("I am not the leader in here");
-			myPlayerInitPacket.createCharacterInitPacket(Character.PC, pc.getId(), pc.getBody().getPosition().x * 100, pc.getBody().getPosition().y * 100);
-			updater.update(myPlayerInitPacket, isLeader);
-			listener.setInitPacket(myPlayerInitPacket);
+			
+			initPacket.createCharacterInitPacket(pc);
+			updater.update(initPacket, isLeader);
+			listener.setInitPacket(initPacket);
 			listener.setUpdater(updater);
 			listener.initialListen();
 		}

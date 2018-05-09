@@ -40,62 +40,66 @@ public class Listener {
 
 	public void initialListen() {
 		if (!isLeader) {
-			// leader will send info for 20 randomly generated characters + 1 for himself, hence, i < 21
-			for (int i = 0; i < 21; i++) {
-				if (!receiveCharacterInitialization()){
-					i = 0;
-				}
-			}
-			
-			//leader will send the room state of all 6 rooms
-			for(int i = 0; i < 6; i++) {
-				receiveRoomUpdate();
-			}
+			receiveInitPacket();
 		} else {
 			receiveCharacterInitialization();
 		}
 	}
-	
-	private void receiveRoomUpdate() {
-		byte[] buffer = new byte[256];
-		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
+	private void receiveInitPacket(){
+		byte[] buffer = new byte[512];
+		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 		try {
 			socket.receive(packet);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
-		int packetType = byteBuffer.getInt(); 
-		int roomID = byteBuffer.getInt();
-		int roomState = byteBuffer.getInt();
+		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);		
 
-		rooms[roomID - 1].setRoomState(roomState);
+		for (int i = 0; i < 16; i++){
+			int type = byteBuffer.getInt();
+			int id = byteBuffer.getInt();
+			float x = byteBuffer.getFloat();
+			float y = byteBuffer.getFloat();
+			addCharacter(type, id, x, y);
+		}
+
+		for (int i = 0; i < 6; i++){
+			int id = byteBuffer.getInt();
+			int state = byteBuffer.getInt();
+			updateRoom(id, state);
+		}
+
 	}
 
-	private boolean receiveCharacterInitialization() {
-		byte[] buffer = new byte[256];
+	private void receiveCharacterInitialization(){
+		byte[] buffer = new byte[512];
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-
 		try {
 			socket.receive(packet);
 		} catch (IOException e) {
-			updater.update(initPacket, isLeader);
-			return false;
+			e.printStackTrace();
 		}
 
-		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
-		int packetType = byteBuffer.getInt(); 
-		int characterType = byteBuffer.getInt();
+		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);		
+
+		int type = byteBuffer.getInt();
 		int id = byteBuffer.getInt();
 		float x = byteBuffer.getFloat();
 		float y = byteBuffer.getFloat();
+		addCharacter(type, id, x, y);
+	}
+	
+	private void updateRoom(int id, int state) {
+		rooms[id - 1].setRoomState(state);
+	}
 
+	private boolean addCharacter(int type, int id, float x, float y) {
 		Character c;
-		if (characterType == Character.PC) {
+		if (type == Character.PC) {
 			c = new Player(id, x, y, world);
-		} else if (characterType == Character.ANIMAL) {
+		} else if (type == Character.ANIMAL) {
 			c = new Animal(id, x, y, world);
 		} else {
 			c = new NPC(id, x, y, world);
