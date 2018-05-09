@@ -3,6 +3,7 @@ package com.groupe.roomgame.screens;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -34,6 +35,7 @@ import com.groupe.roomgame.tools.BodyBuilder;
 import com.groupe.roomgame.tools.Constants;
 import com.groupe.roomgame.networking.Heartbeat;
 import com.groupe.roomgame.networking.election.IPs;
+import com.groupe.roomgame.networking.election.HoldElection;
 import com.groupe.roomgame.objects.Character;
 import com.groupe.roomgame.objects.Animal;
 
@@ -49,6 +51,7 @@ public class GameScreen implements Screen{
 	private Character pc;
 	private Listener listener;
 	private Updater updater;
+	public static boolean leaderIsDead;
 
 	private ConcurrentHashMap<Integer, Character> gameState;
 	private boolean isLeader;
@@ -61,9 +64,10 @@ public class GameScreen implements Screen{
 		this.world = new World(new Vector2(0, 0), true);
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
+		this.leaderIsDead = false;
 
-		/*Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
-		t.start();*/
+		Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
+		t.start();
 		
 		this.gameState = new ConcurrentHashMap<Integer, Character>();
 		
@@ -176,7 +180,18 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		//System.out.println(delta);
+		if (leaderIsDead){
+			try {
+				System.out.println("Leader died holding new election.");
+				IPs.getIPsAsList.remove(IPs.leader.getHostAddress());
+				HoldElection election = new HoldElection(2703);
+				isLeader = election.run();
+				leaderIsDead = false;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		pc.update(delta);
 		pc.getRoom(rooms);
 		renderer.render();
@@ -188,12 +203,6 @@ public class GameScreen implements Screen{
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-
-		float lastX = pc.getBody().getPosition().x;
-		float lastY = pc.getBody().getPosition().y;
-
-		float lastVelX = pc.getBody().getLinearVelocity().x;
-		float lastVelY = pc.getBody().getLinearVelocity().y;
 
 		pc.getBody().setLinearVelocity(new Vector2(0f, 0f));
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
@@ -213,21 +222,11 @@ public class GameScreen implements Screen{
 			pc.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
 
-		world.step(1/60f, 8, 3);
-
-		float dx = pc.getBody().getPosition().x - lastX;
-		float dy = pc.getBody().getPosition().y - lastY;
-
-		/*if (dx != 0 || dy != 0){
-			DataPacket packet = new DataPacket();
-			packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), dx, dy);
-			updater.update(packet, isLeader);
-		}*/
-
 		DataPacket packet = new DataPacket();
 		packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), pc.getBody().getPosition().x, pc.getBody().getPosition().y);
 		updater.update(packet, isLeader);
-			
+
+		world.step(1/60f, 8, 3);
 
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {

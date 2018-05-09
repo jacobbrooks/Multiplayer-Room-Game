@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.groupe.roomgame.networking.election.FindOwnIP;
+import com.groupe.roomgame.screens.GameScreen;
 
 /**
  * @author manil
@@ -52,18 +53,18 @@ public class Heartbeat implements Runnable {
 				socket.setSoTimeout(100);
 
 				int timeouts = 0;
-				while (!Thread.interrupted()) {
+				while (!GameScreen.leaderIsDead) {
 					packet = new DatagramPacket(makeHeartBeatPacket(), 1);
 					try {
 						socket.receive(packet);
-						System.out.println("Packet Received");
+						timeouts = 0;
 						if (packet.getData()[0] != 100)
 							throw new Error();
 					} catch (SocketTimeoutException se) {
 						timeouts++;
 					}
-					if (timeouts >= 3)
-						break;
+					if (timeouts >= 5)
+						GameScreen.leaderIsDead = true;
 				}
 				socket.close();
 			} catch (IOException ie) {
@@ -81,7 +82,6 @@ public class Heartbeat implements Runnable {
 						if (!ia.getHostAddress().equals(FindOwnIP.getMyIP())){
 							packet = new DatagramPacket(makeHeartBeatPacket(), 1, ia, port);
 							socket.send(packet);
-							System.out.println("Packet Sent");
 						}
 					}
 					
