@@ -57,7 +57,7 @@ public class GameScreen implements Screen{
 	private ConcurrentHashMap<Integer, Character> gameState;
 	private boolean isLeader;
 	
-	private Random r;
+	private Random rand;
 
 	public GameScreen(SpriteBatch batch, boolean isLeader){
 		this.batch = batch;
@@ -66,19 +66,19 @@ public class GameScreen implements Screen{
 		this.debug = new Box2DDebugRenderer();
 		this.rooms = new Room[6];
 		this.leaderIsDead = false;
+		this.rand = new Random();
 
 		Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
 		t.start();
 		
 		this.gameState = new ConcurrentHashMap<Integer, Character>();
 		
-		r = new Random();
 		loadCamera();
 		loadMap("map/map.tmx");
 		loadObjects();
 
 		float[] pcCoordinates = randomRoomCoordinates();
-		pc = new Player(r.nextInt(10000), pcCoordinates[0], pcCoordinates[1], world);
+		pc = new Player(rand.nextInt(10000), pcCoordinates[0], pcCoordinates[1], world);
 		gameState.put(pc.getId(), pc);
 
 		listener = new Listener(gameState, rooms, world, isLeader);
@@ -88,12 +88,13 @@ public class GameScreen implements Screen{
 		
 		if (isLeader) {
 			System.out.println("I am leader in here");
-			Character[] generatedCharacters = generateCharacters();
-			initPacket.createInitPacket(pc, generatedCharacters, rooms, gameState);
 
 			for (int i = 0; i < IPs.getIPs.length - 1; i++)
 				listener.initialListen();
 			
+			Character[] generatedCharacters = generateCharacters();
+			initPacket.createInitPacket(rooms, gameState);
+
 			updater.update(initPacket, isLeader);
 		} else {
 			System.out.println("I am not the leader in here");
@@ -112,11 +113,11 @@ public class GameScreen implements Screen{
 	private Character[] generateCharacters() {
 		Character[] characters = new Character[15];
 		for(int i = 0; i < 15; i++) {
-			boolean animal = r.nextBoolean();
+			boolean animal = rand.nextBoolean();
 			
 			float[] roomCoordinates = randomRoomCoordinates();
 			
-			int ranID = r.nextInt(10000);
+			int ranID = rand.nextInt(10000);
 			
 			Character c;
 			if(animal) {
@@ -125,20 +126,21 @@ public class GameScreen implements Screen{
 				c = new NPC(ranID, roomCoordinates[0], roomCoordinates[1], world);
 			}
 			characters[i] = c;
+			gameState.put(ranID, c);
 		}	
 		return characters;
 	}
 	
 	private float[] randomRoomCoordinates() {
-		int randomRoom = r.nextInt(6);
+		int randomRoom = rand.nextInt(6);
 		
 		float roomPosX = rooms[randomRoom].getRect().x;
 		float roomPosY = rooms[randomRoom].getRect().y;
 		float roomWidth = rooms[randomRoom].getRect().width;
 		float roomHeight = rooms[randomRoom].getRect().height;
 		
-		float ranX = r.nextInt((int) roomWidth + 84) + roomPosX - 64;
-		float ranY = r.nextInt((int) roomHeight + 84) + roomPosY - 64;
+		float ranX = rand.nextInt((int) roomWidth + 84) + roomPosX - 64;
+		float ranY = rand.nextInt((int) roomHeight + 84) + roomPosY - 64;
 		
 		return new float[]{ranX, ranY};
 	}
@@ -166,6 +168,7 @@ public class GameScreen implements Screen{
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
 				Body body = BodyBuilder.createBox(world, Constants.STATIC_BODY, rect, Constants.INTERACTIVE_BITS, Constants.INTERACTIVE_BITS, this);
 				rooms[i] = new Room(i + 1, rect, body);
+				rooms[i].setRoomState(rand.nextInt(3));
 			}
 		}
 	}

@@ -3,9 +3,11 @@ package com.groupe.roomgame.networking.packets;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Random;
+import java.util.Iterator;
 
 import com.groupe.roomgame.objects.Character;
 import com.groupe.roomgame.objects.Room;
+import com.groupe.roomgame.networking.election.IPs;
 
 public class DataPacket {
 	
@@ -15,26 +17,29 @@ public class DataPacket {
 	public static final int CHARACTER_INIT = 0;
 	public static final int CHARACTER_UPDATE = 1;
 	public static final int ROOM_UPDATE = 2;
-	public static final Random rand = new Random();
 	
 	private byte[] bytes;
 	
 	/*
 	 * Character initialization packet : CHARACTER_INIT
 	 */
-	public void createInitPacket(Character pc, Character[] characters, Room[] rooms, ConcurrentHashMap<Integer, Character> gameState) {
-		int size = ((characters.length + 1) * ((2 * (Integer.SIZE / 8)) + (2 * (Float.SIZE / 8)))) + (rooms.length * (2 * (Integer.SIZE / 8)));
+	public void createInitPacket(Room[] rooms, ConcurrentHashMap<Integer, Character> gameState) {
+		int charCount = gameState.keySet().size() + IPs.getIPs.length;
+		int numInts = 2 * (Integer.SIZE / 8);
+		int numFloats = 2 * (Float.SIZE / 8);
+		int numRooms = rooms.length;
+
+		int size = (charCount * (numInts + numFloats)) + (numRooms * numInts);
+
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 
-		buffer.putInt(Character.PC).putInt(pc.getId()).putFloat(pc.getBody().getPosition().x * 100).putFloat(pc.getBody().getPosition().y * 100);
-		
-		for (Character c : characters){
+		Iterator<Integer> it = gameState.keySet().iterator();
+		while (it.hasNext()){
+			Character c = gameState.get(it.next());
 			buffer.putInt(c.getType()).putInt(c.getId()).putFloat(c.getBody().getPosition().x * 100).putFloat(c.getBody().getPosition().y * 100);
-			gameState.put(c.getId(), c);
 		}
 		
 		for (Room r : rooms){
-			r.setRoomState(rand.nextInt(3));
 			buffer.putInt(r.getID()).putInt(r.getRoomState());
 		}
 
