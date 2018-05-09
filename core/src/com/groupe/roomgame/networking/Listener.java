@@ -65,7 +65,9 @@ public class Listener {
 			int id = byteBuffer.getInt();
 			float x = byteBuffer.getFloat();
 			float y = byteBuffer.getFloat();
-			addCharacter(type, id, x, y);
+			
+			if (!gameState.containsKey(id))
+				addCharacter(type, id, x, y);
 		}
 
 		for (int i = 0; i < 6; i++){
@@ -92,8 +94,7 @@ public class Listener {
 		float x = byteBuffer.getFloat();
 		float y = byteBuffer.getFloat();
 
-		if (!gameState.containsKey(id))
-			addCharacter(type, id, x, y);
+		addCharacter(type, id, x, y);
 		return true;
 	}
 	
