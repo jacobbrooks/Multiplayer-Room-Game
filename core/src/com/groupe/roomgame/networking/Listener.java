@@ -5,6 +5,9 @@ import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.groupe.roomgame.networking.packets.DataPacket;
+import com.groupe.roomgame.networking.election.FindOwnIP;
+import com.groupe.roomgame.networking.election.IPs;
+
 import com.groupe.roomgame.objects.Animal;
 import com.groupe.roomgame.objects.Character;
 import com.groupe.roomgame.objects.NPC;
@@ -117,6 +120,9 @@ public class Listener {
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					try {
 						socket.receive(packet);
+						if (isLeader)
+							sendOut(packet, buffer);
+
 						ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 						int packetType = byteBuffer.getInt();
 						int id = byteBuffer.getInt();
@@ -133,12 +139,24 @@ public class Listener {
 		}).start();
 	}
 
+	private void sendOut(DatagramPacket received, byte[] bytes) throws IOException {
+		for (InetAddress addr : IPs.getIPsAsList){
+			if (!addr.getHostAddress().equals(FindOwnIP.getMyIP()) && !addr.getHostAddress().equals(received.getAddress().getHostAddress())){
+				DatagramPacket packet = new DatagramPacket(bytes, bytes.length, addr, 6145);
+			}
+		}
+	}
+
 	public void setInitPacket(DataPacket initPacket){
 		this.initPacket = initPacket;
 	}
 
 	public void setUpdater(Updater updater){
 		this.updater = updater;
+	}
+
+	public void setLeader(boolean isLeader){
+		this.isLeader = isLeader;
 	}
 
 }

@@ -25,7 +25,7 @@ public class Updater {
 		try {
 			byte[] bytes = packet.getBytes();
 			if (isLeader){
-				for (InetAddress addr : IPs.getIPs){
+				for (InetAddress addr : IPs.getIPsAsList){
 					if (!addr.getHostAddress().equals(FindOwnIP.getMyIP())){
 						DatagramPacket dgPacket = new DatagramPacket(bytes, bytes.length, addr, 6145);
 						socket.send(dgPacket);
