@@ -27,11 +27,7 @@ public class HoldElection {
 
 	public static AtomicInteger votes;
 
-	public HoldElection(int port) throws IOException {
-		IPs.set1();
-		IPs.set2();
-		IPs.set3();
-		
+	public HoldElection(int port) throws IOException {	
 		this.port = port;
 		this.votes = new AtomicInteger(1);
 		this.socket = new DatagramSocket(port);

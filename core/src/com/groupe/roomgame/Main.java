@@ -20,6 +20,9 @@ public class Main extends Game {
 		boolean isLeader = false;
 
 		try {
+			IPs.set1();
+			IPs.set2();
+			IPs.set3();
 			HoldElection election = new HoldElection(2703);
 			isLeader = election.run();
 		} catch (IOException e) {
