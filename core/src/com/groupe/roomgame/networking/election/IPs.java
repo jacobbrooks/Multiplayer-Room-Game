@@ -34,17 +34,17 @@ public class IPs {
 	}
 
 	public static void set2() throws IOException {
-		//nuc2 = InetAddress.getByName(nuc2String);
-		nuc7 = InetAddress.getByName(nuc7String);
+		nuc2 = InetAddress.getByName(nuc2String);
+		//nuc7 = InetAddress.getByName(nuc7String);
 	}
 
 	public static void set3() throws IOException {
-		//nuc3 = InetAddress.getByName(nuc3String);
-		//getIPs = new InetAddress[]{nuc1, nuc2, nuc3};
-		//getIPsAsString = new String[]{nuc1String, nuc2String, nuc3String};
-		getIPs = new InetAddress[]{nuc1, nuc7};
+		nuc3 = InetAddress.getByName(nuc3String);
+		getIPs = new InetAddress[]{nuc1, nuc2, nuc3};
+		getIPsAsString = new String[]{nuc1String, nuc2String, nuc3String};
+		//getIPs = new InetAddress[]{nuc1, nuc7};
 		getIPsAsList = new CopyOnWriteArrayList<InetAddress>(getIPs);
-		getIPsAsString = new String[]{nuc1String, nuc7String};
+		//getIPsAsString = new String[]{nuc1String, nuc7String};
 		needToVote = new CopyOnWriteArrayList<String>(getIPsAsString);
 		needToVoteStored = new CopyOnWriteArrayList<String>(needToVote);
 	}

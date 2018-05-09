@@ -29,7 +29,6 @@ public class Updater {
 					if (!addr.getHostAddress().equals(FindOwnIP.getMyIP())){
 						DatagramPacket dgPacket = new DatagramPacket(bytes, bytes.length, addr, 6145);
 						socket.send(dgPacket);
-						System.out.println("Sent data packet.");
 					}
 				}
 			} else {

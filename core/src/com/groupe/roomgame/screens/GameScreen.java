@@ -143,8 +143,8 @@ public class GameScreen implements Screen{
 		float roomWidth = rooms[randomRoom].getRect().width;
 		float roomHeight = rooms[randomRoom].getRect().height;
 		
-		float ranX = r.nextInt((int) roomWidth) + roomPosX - 64;
-		float ranY = r.nextInt((int) roomHeight) + roomPosY - 64;
+		float ranX = r.nextInt((int) roomWidth + 84) + roomPosX - 64;
+		float ranY = r.nextInt((int) roomHeight + 84) + roomPosY - 64;
 		
 		return new float[]{ranX, ranY};
 	}
