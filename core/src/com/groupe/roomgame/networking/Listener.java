@@ -38,21 +38,21 @@ public class Listener {
 		
 	}
 
-	public void initialListen() {
+	public boolean initialListen() {
 		if (!isLeader) {
-			receiveInitPacket();
+			return receiveInitPacket();
 		} else {
-			receiveCharacterInitialization();
+			return receiveCharacterInitialization();
 		}
 	}
 
-	private void receiveInitPacket(){
+	private boolean receiveInitPacket(){
 		byte[] buffer = new byte[512];
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 		try {
 			socket.receive(packet);
 		} catch (IOException e) {
-			e.printStackTrace();
+			return false;
 		}
 
 		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);		
@@ -70,16 +70,16 @@ public class Listener {
 			int state = byteBuffer.getInt();
 			updateRoom(id, state);
 		}
-
+		return true;
 	}
 
-	private void receiveCharacterInitialization(){
+	private boolean receiveCharacterInitialization(){
 		byte[] buffer = new byte[512];
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 		try {
 			socket.receive(packet);
 		} catch (IOException e) {
-			e.printStackTrace();
+			return false;
 		}
 
 		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);		
@@ -89,13 +89,14 @@ public class Listener {
 		float x = byteBuffer.getFloat();
 		float y = byteBuffer.getFloat();
 		addCharacter(type, id, x, y);
+		return true;
 	}
 	
 	private void updateRoom(int id, int state) {
 		rooms[id - 1].setRoomState(state);
 	}
 
-	private boolean addCharacter(int type, int id, float x, float y) {
+	private void addCharacter(int type, int id, float x, float y) {
 		Character c;
 		if (type == Character.PC) {
 			c = new Player(id, x, y, world);
@@ -106,7 +107,6 @@ public class Listener {
 		}
 
 		gameState.put(id, c);
-		return true;
 	}
 
 	public void updateListen() {
@@ -126,7 +126,7 @@ public class Listener {
 						// System.out.println("vx: " + vx + ", vy: " + vy);
 						gameState.get(id).update(dx, dy);
 					} catch (IOException e) {
-						e.printStackTrace();
+						System.out.println("Time out.");
 					}
 				}
 			}

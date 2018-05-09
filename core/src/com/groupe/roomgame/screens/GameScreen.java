@@ -83,30 +83,31 @@ public class GameScreen implements Screen{
 		
 		if (isLeader) {
 			System.out.println("I am leader in here");
-			
+			Character[] generatedCharacters = generateCharacters();
+			initPacket.createInitPacket(pc, generatedCharacters, rooms, gameState);
+
 			for (int i = 0; i < IPs.getIPs.length - 1; i++)
 				listener.initialListen();
 			
-			Character[] generatedCharacters = generateCharacters();
-			initPacket.createInitPacket(pc, generatedCharacters, rooms, gameState);
+			System.out.println("Got init character packets.");
 			updater.update(initPacket, isLeader);
-
 		} else {
 			System.out.println("I am not the leader in here");
 			
 			initPacket.createCharacterInitPacket(pc);
 			updater.update(initPacket, isLeader);
-			listener.setInitPacket(initPacket);
-			listener.setUpdater(updater);
-			listener.initialListen();
+			
+			while (!listener.initialListen()){
+				updater.update(initPacket, isLeader);
+			}
 		}
 		
 		listener.updateListen();
 	}
 	
 	private Character[] generateCharacters() {
-		Character[] characters = new Character[20];
-		for(int i = 0; i < 20; i++) {
+		Character[] characters = new Character[15];
+		for(int i = 0; i < 15; i++) {
 			boolean animal = r.nextBoolean();
 			
 			float[] roomCoordinates = randomRoomCoordinates();

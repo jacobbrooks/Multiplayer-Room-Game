@@ -23,7 +23,7 @@ public class DataPacket {
 	 * Character initialization packet : CHARACTER_INIT
 	 */
 	public void createInitPacket(Character pc, Character[] characters, Room[] rooms, ConcurrentHashMap<Integer, Character> gameState) {
-		int size = (characters.length + 1) * (2 * (Integer.SIZE / 8)) + (2 * (Float.SIZE / 8)) + (rooms.length * (2 * (Integer.SIZE / 8)));
+		int size = ((characters.length + 1) * ((2 * (Integer.SIZE / 8)) + (2 * (Float.SIZE / 8)))) + (rooms.length * (2 * (Integer.SIZE / 8)));
 		ByteBuffer buffer = ByteBuffer.allocate(size);
 
 		buffer.putInt(Character.PC).putInt(pc.getId()).putFloat(pc.getBody().getPosition().x * 100).putFloat(pc.getBody().getPosition().y * 100);
