@@ -184,8 +184,13 @@ public class GameScreen implements Screen{
 		if (leaderIsDead){
 			try {
 				System.out.println("Leader died holding new election.");
-				IPs.getIPsAsList.remove(IPs.leader.getHostAddress());
-				IPs.needToVote = new CopyOnWriteArrayList<String>(IPs.getIPsAsString);
+				IPs.getIPsAsList.remove(IPs.leader);
+
+				String[] tmp = new String[IPs.getIPsAsList.size()];
+				for (int i = 0; i < tmp.length; i++)
+					tmp[i] = IPs.getIPsAsList.get(i).getHostAddress();
+
+				IPs.needToVote = new CopyOnWriteArrayList<String>(tmp);
 				IPs.needToVoteStored = new CopyOnWriteArrayList<String>(IPs.needToVote);
 				HoldElection election = new HoldElection(2703);
 				isLeader = election.run();
