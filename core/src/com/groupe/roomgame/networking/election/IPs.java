@@ -62,7 +62,6 @@ public class IPs {
 	}*/
 
 	public static void set3() throws IOException {
-		
 		nuc27 = InetAddress.getByName(nuc27String);
 		getIPs = new InetAddress[]{nuc18, nuc14, nuc27};
 		getIPsAsString = new String[]{nuc18String, nuc14String, nuc27String};

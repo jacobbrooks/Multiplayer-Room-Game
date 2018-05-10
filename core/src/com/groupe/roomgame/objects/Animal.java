@@ -37,10 +37,10 @@ public class Animal extends Character{
 	}
 
 	public void update(float dx, float dy){
-		if(!world.isLocked()){
+		/*if(!world.isLocked()){
 			body.setTransform(body.getPosition().x + dx, body.getPosition().y + dy, 0f);
 			body.setAwake(true);
-		}
+		}*/
 	}
 	
 	public int getId() {

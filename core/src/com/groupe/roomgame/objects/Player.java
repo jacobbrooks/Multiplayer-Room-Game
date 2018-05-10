@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Character{
 	
@@ -29,9 +30,11 @@ public class Player extends Character{
 	}
 
 	public void update(float x, float y){
-		if(!world.isLocked()){
+		for (;;){
+			if (world.isLocked())
+				continue;
 			body.setTransform(x, y, 0f);
-			body.setAwake(true);
+			break;
 		}
 	}
 	

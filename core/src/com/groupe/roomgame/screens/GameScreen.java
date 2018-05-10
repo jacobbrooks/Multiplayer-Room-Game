@@ -183,6 +183,13 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		for (;;) {
+			if (world.isLocked())
+				continue;
+			world.step(1/60f, 8, 3);
+			break;
+		}
 
 		if (leaderIsDead){
 			try {
@@ -238,8 +245,6 @@ public class GameScreen implements Screen{
 		DataPacket packet = new DataPacket();
 		packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), pc.getBody().getPosition().x, pc.getBody().getPosition().y);
 		updater.update(packet, isLeader);
-
-		world.step(1/60f, 8, 3);
 
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
