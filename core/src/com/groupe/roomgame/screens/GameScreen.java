@@ -133,16 +133,17 @@ public class GameScreen implements Screen{
 	
 	private float[] randomRoomCoordinates() {
 		int randomRoom = rand.nextInt(6);
-		
-		float roomPosX = rooms[randomRoom].getRect().x;
-		float roomPosY = rooms[randomRoom].getRect().y;
+
 		float roomWidth = rooms[randomRoom].getRect().width;
 		float roomHeight = rooms[randomRoom].getRect().height;
 		
-		float ranX = rand.nextInt((int) roomWidth + 84) + roomPosX - 64;
-		float ranY = rand.nextInt((int) roomHeight + 84) + roomPosY - 64;
+		float roomPosX = rooms[randomRoom].getRect().x - roomWidth / 2;
+		float roomPosY = rooms[randomRoom].getRect().y - roomHeight / 2;
 		
-		return new float[]{ranX, ranY};
+		//float ranX = rand.nextInt((int) roomWidth + 84) + roomPosX - 64;
+		//float ranY = rand.nextInt((int) roomHeight + 84) + roomPosY - 64;
+		
+		return new float[]{roomPosX, roomPosY};
 	}
 
 	private void loadMap(String mapName) {
