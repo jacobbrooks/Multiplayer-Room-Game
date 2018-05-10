@@ -145,8 +145,8 @@ public class Listener {
 	private void sendOut(DatagramPacket received, byte[] bytes) throws IOException {
 		for (InetAddress addr : IPs.getIPsAsList){
 			if (!addr.getHostAddress().equals(FindOwnIP.getMyIP()) && !addr.getHostAddress().equals(received.getAddress().getHostAddress())){
-				System.out.println("Sending update packet to: " + addr.getHostAddress());
 				DatagramPacket packet = new DatagramPacket(bytes, bytes.length, addr, 6145);
+				socket.send(packet);
 			}
 		}
 	}
