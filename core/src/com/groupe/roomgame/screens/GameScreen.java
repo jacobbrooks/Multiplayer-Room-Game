@@ -178,7 +178,6 @@ public class GameScreen implements Screen{
 	
 	}
 
-
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0,0,0,0);
