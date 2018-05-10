@@ -34,8 +34,8 @@ public abstract class Character{
 		this.id = id;
 		this.world = world;
 		respect = 40;
-		this.x = (x / Constants.SCALE);
-		this.y = (y / Constants.SCALE);
+		this.x = x / 100;
+		this.y = y / 100;
 	}
 	
 	public void getRoom(Room[] rooms) {
