@@ -25,6 +25,9 @@ public abstract class Character{
 	protected Rectangle rect;
 	protected int respect;
 
+	protected float x;
+	protected float y;
+
 	public Character(int id, float x, float y, World world){
 		this.rect = new Rectangle(x, y, 64, 64);
 		body = BodyBuilder.createBox(world, BodyType.DynamicBody, rect, cBits, mBits, this);
@@ -62,5 +65,8 @@ public abstract class Character{
 	
 	public abstract void setRespect(int respect);
 
+	public abstract float getX();
+
+	public abstract float getY();
 	
 }

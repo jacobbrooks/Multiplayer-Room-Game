@@ -30,12 +30,16 @@ public class Player extends Character{
 	}
 
 	public void update(float x, float y){
-		Vector2 target = new Vector2(x, y);
-		Vector2 desired = target.sub(body.getPosition());
-		desired.nor();
-		desired.scl(100);
-		Vector2 steer = desired.sub(body.getLinearVelocity());
-		body.applyLinearImpulse(steer, body.getWorldCenter(), true);
+		this.x = x;
+		this.y = y;
+	}
+
+	public float getX(){
+		return x;
+	}
+
+	public float getY(){
+		return y;
 	}
 	
 	public int getId() {

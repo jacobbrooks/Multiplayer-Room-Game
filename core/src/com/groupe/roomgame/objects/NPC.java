@@ -28,8 +28,17 @@ public class NPC extends Character{
 		sprite.draw(sb);
 	}
 
-	public void update(float dx, float dy){
-		//other stuff
+	public void update(float x, float y){
+		this.x = x;
+		this.y = y;
+	}
+
+	public float getX(){
+		return x;
+	}
+
+	public float getY(){
+		return y;
 	}
 	
 	public int getId() {

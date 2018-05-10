@@ -184,12 +184,7 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		for (;;) {
-			if (world.isLocked())
-				continue;
-			world.step(1/60f, 8, 3);
-			break;
-		}
+		world.step(1/60f, 8, 3);
 
 		if (leaderIsDead){
 			try {
@@ -250,6 +245,9 @@ public class GameScreen implements Screen{
 		while(it.hasNext()) {
 			Character tmp = gameState.get(it.next());
 			tmp.render(batch);
+			if (!world.isLocked()){
+				tmp.getBody().setTransform(tmp.getX(), tmp.getY(), 0);
+			}
 		}
 
 		System.out.println(gameState.keySet().size());

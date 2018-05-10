@@ -36,11 +36,17 @@ public class Animal extends Character{
 		sprite.draw(sb);
 	}
 
-	public void update(float dx, float dy){
-		/*if(!world.isLocked()){
-			body.setTransform(body.getPosition().x + dx, body.getPosition().y + dy, 0f);
-			body.setAwake(true);
-		}*/
+	public void update(float x, float y){
+		this.x = x;
+		this.y = y;
+	}
+
+	public float getX(){
+		return x;
+	}
+
+	public float getY(){
+		return y;
 	}
 	
 	public int getId() {
