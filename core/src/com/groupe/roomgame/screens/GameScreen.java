@@ -245,7 +245,8 @@ public class GameScreen implements Screen{
 			Character tmp = gameState.get(it.next());
 			tmp.render(batch);
 			if (!world.isLocked()){
-				tmp.getBody().setTransform(tmp.getX(), tmp.getY(), 0);
+				if (tmp.getId != pc.getId())
+					tmp.getBody().setTransform(tmp.getX(), tmp.getY(), 0);
 			}
 		}
 
