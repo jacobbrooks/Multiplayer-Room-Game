@@ -138,7 +138,7 @@ public class GameScreen implements Screen{
 		float roomHeight = rooms[randomRoom].getRect().height;
 		
 		Vector2 center = new Vector2();
-		float roomPosX = rooms[randomRoom].getRect().getCenter(center);
+		rooms[randomRoom].getRect().getCenter(center);
 
 		
 		//float ranX = rand.nextInt((int) roomWidth + 84) + roomPosX - 64;
