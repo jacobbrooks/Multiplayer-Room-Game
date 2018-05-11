@@ -79,7 +79,7 @@ public class HoldElection {
 				if (IPs.getIPsAsList.size() % 2 == 0)
 					votesNeeded = (IPs.getIPsAsList.size() / 2) + 1;
 				else
-					votesNeeded = (int) Math.ceil(IPs.getIPsAsList.size());
+					votesNeeded = (int) Math.ceil(IPs.getIPsAsList.size() / 2.0);
 
 				System.out.println("votes: " + votes.get() + " - needed: " + votesNeeded);
 
