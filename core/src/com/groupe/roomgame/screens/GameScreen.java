@@ -134,18 +134,38 @@ public class GameScreen implements Screen{
 	
 	private float[] randomRoomCoordinates() {
 		int randomRoom = rand.nextInt(6);
-
-		float roomWidth = rooms[randomRoom].getRect().width;
-		float roomHeight = rooms[randomRoom].getRect().height;
 		
 		Vector2 center = new Vector2();
 		rooms[randomRoom].getRect().getCenter(center);
+		int halfWidth = (int) rooms[randomRoom].getRect().getWidth() / 2;
+		int halfHeight = (int) rooms[randomRoom].getRect().getHeight() / 2;
 
-		
-		//float ranX = rand.nextInt((int) roomWidth + 84) + roomPosX - 64;
-		//float ranY = rand.nextInt((int) roomHeight + 84) + roomPosY - 64;
-		
-		return new float[]{center.x, center.y};
+		boolean subtractX = rand.nextBoolean();
+		boolean subtractY = rand.nextBoolean();
+
+		int xOffset = 0;
+		int yOffset = 0;
+
+		float roomPosX = center.x;
+		float roomPosY = center.y;
+
+		if(subtractX){
+			xOffset = rand.nextInt(halfWidth - 25);
+			roomPosX -= xOffset;
+		}else{
+			xOffset = rand.nextInt(halfWidth - (64 + 25));
+			roomPosX += xOffset;
+		}
+
+		if(subtractY){
+			yOffset = rand.nextInt(halfHeight - 25);
+			roomPosY -= yOffset;
+		}else{
+			xOffset = rand.nextInt(halfHeight - (64 + 25));
+			roomPosY += yOffset;
+		}
+
+		return new float[]{roomPosX, roomPosY};
 	}
 
 	private void loadMap(String mapName) {
