@@ -75,7 +75,14 @@ public class HoldElection {
 				}
 
 				System.out.println("votes: " + votes.get() + " - needed: " + (int) Math.ceil(IPs.getIPsAsList.size() / 2.0));
-				if (votes.get() > (int) Math.ceil(IPs.getIPsAsList.size())){
+				int votesNeeded = 0;
+				
+				if (IPs.getIPsAsList.size() % 2 == 0)
+					votesNeeded = (IPs.getIPsAsList.size() / 2) + 1;
+				else
+					votesNeeded = (int) Math.ceil(IPs.getIPsAsList.size());
+
+				if (votes.get() > votesNeeded){
 					new Leader().sendConfirmations();
 					running = false;
 					isLeader = true;
