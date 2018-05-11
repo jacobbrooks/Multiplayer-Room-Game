@@ -9,20 +9,20 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.groupe.roomgame.screens.GameScreen;
 
 public class NPC extends Character{
-	
+
 	public NPC(int id, float x, float y, World world) {
 		super(id, x, y, world);
 		sprite = new Sprite(new Texture("characters/npc.png"));
 	}
-	
+
 	public Body getBody() {
 		return body;
 	}
-	
+
 	public Sprite getSprite() {
 		return sprite;
 	}
-	
+
 	public void render(SpriteBatch sb) {
 		sprite.setPosition((float)(body.getPosition().x - sprite.getWidth() / 2), (float)(body.getPosition().y - sprite.getHeight() / 2));
 		sprite.setOriginCenter();
@@ -43,11 +43,11 @@ public class NPC extends Character{
 	public float getY(){
 		return y;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public int getType() {
 		return NPC;
 	}
@@ -55,7 +55,7 @@ public class NPC extends Character{
 	public int getRespect() {
 		return respect;
 	}
-	
+
 	public void setRespect(int respect) {
 		this.respect = respect;
 	}
@@ -70,13 +70,13 @@ public class NPC extends Character{
 
 	private boolean leaveRoom(GameScreen screen, Room[] rooms){
 		if (currentRoom.getRoomState() == Room.CLEAN){
-			int newRoomID = rand.nextInt(6) + 1;
+			int newRoomID = rand.nextInt(6);
 			while (newRoomID == currentRoom.getID())
-				newRoomID = rand.nextInt(6) + 1;
+				newRoomID = rand.nextInt(6);
 
 			float[] coords = screen.randomRoomCoordinates(false, newRoomID);
 			update(coords[0], coords[1]);
-			currentRoom = rooms[newRoomID - 1];
+			currentRoom = rooms[newRoomID];
 			this.x = x / 100;
 			this.y = y / 100;
 			return true;

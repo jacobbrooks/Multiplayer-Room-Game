@@ -40,7 +40,7 @@ public class Listener {
 			e.printStackTrace();
 		}
 		this.isLeader = isLeader;
-		
+
 	}
 
 	public boolean initialListen() {
@@ -60,14 +60,14 @@ public class Listener {
 			return false;
 		}
 
-		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);		
+		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 
 		for (int i = 0; i < 15 + IPs.getIPs.length; i++){
 			int type = byteBuffer.getInt();
 			int id = byteBuffer.getInt();
 			float x = byteBuffer.getFloat();
 			float y = byteBuffer.getFloat();
-			
+
 			if (!gameState.containsKey(id))
 				addCharacter(type, id, x, y);
 		}
@@ -89,7 +89,7 @@ public class Listener {
 			return false;
 		}
 
-		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);		
+		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 
 		int type = byteBuffer.getInt();
 		int id = byteBuffer.getInt();
@@ -99,9 +99,9 @@ public class Listener {
 		addCharacter(type, id, x, y);
 		return true;
 	}
-	
+
 	private void updateRoom(int id, int state) {
-		rooms[id - 1].setRoomState(state);
+		rooms[id].setRoomState(state);
 	}
 
 	private void addCharacter(int type, int id, float x, float y) {
@@ -121,25 +121,25 @@ public class Listener {
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
-					
+
 					byte[] buffer = new byte[256];
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-					
+
 					try {
-						
+
 						socket.receive(packet);
 
 						if (isLeader)
 							sendOut(packet, buffer);
 
 						ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
-						
+
 						int packetType = byteBuffer.getInt();
 
 						if(packetType == DataPacket.ROOM_UPDATE){
 							int roomID = byteBuffer.getInt();
 							int roomState = byteBuffer.getInt();
-							rooms[roomID - 1].setRoomState(roomState);
+							rooms[roomID].setRoomState(roomState);
 						}else{
 							int id = byteBuffer.getInt();
 							int respect = byteBuffer.getInt();

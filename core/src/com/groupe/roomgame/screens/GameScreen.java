@@ -58,7 +58,7 @@ public class GameScreen implements Screen{
 
 	private ConcurrentHashMap<Integer, Character> gameState;
 	private boolean isLeader;
-	
+
 	private Random rand;
 
 	public GameScreen(SpriteBatch batch, boolean isLeader){
@@ -72,9 +72,9 @@ public class GameScreen implements Screen{
 
 		Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
 		t.start();
-		
+
 		this.gameState = new ConcurrentHashMap<Integer, Character>();
-		
+
 		loadCamera();
 		loadMap("map/map.tmx");
 		loadObjects();
@@ -87,40 +87,40 @@ public class GameScreen implements Screen{
 		updater = new Updater();
 
 		DataPacket initPacket = new DataPacket();
-		
+
 		if (isLeader) {
 			System.out.println("I am leader in here");
 
 			for (int i = 0; i < IPs.getIPs.length - 1; i++)
 				listener.initialListen();
-			
+
 			Character[] generatedCharacters = generateCharacters();
 			initPacket.createInitPacket(rooms, gameState);
 
 			updater.update(initPacket, isLeader);
 		} else {
 			System.out.println("I am not the leader in here");
-			
+
 			initPacket.createCharacterInitPacket(pc);
 			updater.update(initPacket, isLeader);
-			
+
 			while (!listener.initialListen()){
 				updater.update(initPacket, isLeader);
 			}
 		}
-		
+
 		listener.updateListen();
 	}
-	
+
 	private Character[] generateCharacters() {
 		Character[] characters = new Character[15];
 		for(int i = 0; i < 15; i++) {
 			boolean animal = rand.nextBoolean();
-			
+
 			float[] roomCoordinates = randomRoomCoordinates(true, 0);
-			
+
 			int ranID = rand.nextInt(10000);
-			
+
 			Character c;
 			if (animal) {
 				c = new Animal(ranID, roomCoordinates[0], roomCoordinates[1], world);
@@ -129,10 +129,10 @@ public class GameScreen implements Screen{
 			}
 			characters[i] = c;
 			gameState.put(ranID, c);
-		}	
+		}
 		return characters;
 	}
-	
+
 	public float[] randomRoomCoordinates(boolean random, int roomID) {
 
 		int roomIndex = -1;
@@ -140,9 +140,9 @@ public class GameScreen implements Screen{
 		if(random){
 			roomIndex = rand.nextInt(6);
 		}else{
-			roomIndex = roomID - 1; 
+			roomIndex = roomID;
 		}
-		
+
 		Vector2 center = new Vector2();
 		rooms[roomIndex].getRect().getCenter(center);
 		int halfWidth = (int) rooms[roomIndex].getRect().getWidth() / 2;
@@ -191,7 +191,7 @@ public class GameScreen implements Screen{
 		new Hallway(map, world, "Hallway");
 		new RoomWalls(map, world, "Room Walls");
 		loadRooms();
-    
+
 		for(Room r : rooms){
 			r.generateSocks();
 			r.generateLemonPledge();
@@ -200,10 +200,10 @@ public class GameScreen implements Screen{
 
 	private void loadRooms() {
 		for (int i = 0; i < rooms.length; i++) {
-			for (MapObject object : map.getLayers().get("Room " + (i + 1)).getObjects().getByType(RectangleMapObject.class)) {
+			for (MapObject object : map.getLayers().get("Room " + i).getObjects().getByType(RectangleMapObject.class)) {
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
 				Body body = BodyBuilder.createBox(world, Constants.STATIC_BODY, rect, Constants.INTERACTIVE_BITS, Constants.INTERACTIVE_BITS, this);
-				rooms[i] = new Room(i + 1, rect, body, this);
+				rooms[i] = new Room(i, rect, body, this);
 				rooms[i].setRoomState(rand.nextInt(3));
 			}
 		}
@@ -211,20 +211,20 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void show() {
-	
+
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		world.step(1/60f, 8, 3);
 
 		if (leaderIsDead){
 			reholdElection();
 		}
-    
+
 		renderer.render();
 		renderer.setView(camera);
 		camera.position.set(pc.getBody().getPosition().x, pc.getBody().getPosition().y, 0);
@@ -261,7 +261,7 @@ public class GameScreen implements Screen{
 	private void sendCharacterUpdatePacket(Character c){
 		DataPacket packet = new DataPacket();
 		packet.createCharacterUpdatePacket(c.getId(), c.getRespect(), c.getBody().getPosition().x, c.getBody().getPosition().y);
-		updater.update(packet, isLeader);	
+		updater.update(packet, isLeader);
 	}
 
 	public void updateState(){
