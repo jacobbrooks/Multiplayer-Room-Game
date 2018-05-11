@@ -121,7 +121,7 @@ public class GameScreen implements Screen{
 			int ranID = rand.nextInt(10000);
 			
 			Character c;
-			if(animal) {
+			if (animal) {
 				c = new Animal(ranID, roomCoordinates[0], roomCoordinates[1], world);
 			}else {
 				c = new NPC(ranID, roomCoordinates[0], roomCoordinates[1], world);
@@ -209,33 +209,10 @@ public class GameScreen implements Screen{
 		world.step(1/60f, 8, 3);
 
 		if (leaderIsDead){
-			try {
-				IPs.getIPsAsList.remove(IPs.leader);
-				
-				/*if (!world.isLocked())
-					world.destroyBody(gameState.get(leaderId).getBody());
-
-				gameState.remove(leaderId);*/
-
-				String[] tmp = new String[IPs.getIPsAsList.size()];
-				for (int i = 0; i < tmp.length; i++)
-					tmp[i] = IPs.getIPsAsList.get(i).getHostAddress();
-
-				IPs.needToVote = new CopyOnWriteArrayList<String>(tmp);
-				IPs.needToVoteStored = new CopyOnWriteArrayList<String>(IPs.needToVote);
-				HoldElection election = new HoldElection(2703);
-				isLeader = election.run();
-				listener.setLeader(isLeader);
-				leaderIsDead = false;
-				Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
-				t.start();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			reHoldElection();
 		}
 
-		pc.update(delta);
-		pc.getRoom(rooms);
+		
 		renderer.render();
 		renderer.setView(camera);
 
@@ -246,6 +223,42 @@ public class GameScreen implements Screen{
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
+		handleInput();
+		pc.update(pc.getBody().getPosition().x, pc.getBody().getPosition().y);
+		pc.setRoom(rooms);
+
+		sendPlayerUpdatePacket();
+		updateState();
+
+		batch.end();
+		debug.render(world, camera.combined);
+	}
+
+	private void sendRoomUpdatePacket(){
+		DataPacket packet = new DataPacket();
+		packet.createRoomUpdatePacket(pc.getRoom().getID(), pc.getRoom().getRoomState());
+		updater.update(packet, isLeader);
+	}
+
+	private void sendPlayerUpdatePacket(){
+		DataPacket packet = new DataPacket();
+		packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), pc.getBody().getPosition().x, pc.getBody().getPosition().y);
+		updater.update(packet, isLeader);	
+	}
+
+	private void updateState(){
+		Iterator<Integer> it = gameState.keySet().iterator();
+		while(it.hasNext()) {
+			Character tmp = gameState.get(it.next());
+			tmp.render(batch);
+			if (!world.isLocked()){
+				if (tmp.getId() != pc.getId())
+					tmp.getBody().setTransform(tmp.getX(), tmp.getY(), 0);
+			}
+		}
+	}
+
+	private void handleInput(){
 		pc.getBody().setLinearVelocity(new Vector2(0f, 0f));
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
 			pc.getBody().setLinearVelocity(new Vector2(-1f, 0f));
@@ -264,24 +277,37 @@ public class GameScreen implements Screen{
 			pc.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
 
-		DataPacket packet = new DataPacket();
-		packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), pc.getBody().getPosition().x, pc.getBody().getPosition().y);
-		updater.update(packet, isLeader);
+		if (Gdx.input.isKeyPressed(Keys.D)){
+			pc.dirtyRoom();
+			sendRoomUpdatePacket();
 
-		Iterator<Integer> it = gameState.keySet().iterator();
-		while(it.hasNext()) {
-			Character tmp = gameState.get(it.next());
-			tmp.render(batch);
-			if (!world.isLocked()){
-				if (tmp.getId() != pc.getId())
-					tmp.getBody().setTransform(tmp.getX(), tmp.getY(), 0);
-			}
 		}
 
-		System.out.println(gameState.keySet().size());
-		batch.end();
+		if (Gdx.input.isKeyPressed(Keys.C)){
+			sendRoomUpdatePacket();
+			pc.cleanRoom();
+		}
+	}
 
-		debug.render(world, camera.combined);
+	private void reHoldElection(){
+		try {
+			IPs.getIPsAsList.remove(IPs.leader);
+
+			String[] tmp = new String[IPs.getIPsAsList.size()];
+			for (int i = 0; i < tmp.length; i++)
+				tmp[i] = IPs.getIPsAsList.get(i).getHostAddress();
+
+			IPs.needToVote = new CopyOnWriteArrayList<String>(tmp);
+			IPs.needToVoteStored = new CopyOnWriteArrayList<String>(IPs.needToVote);
+			HoldElection election = new HoldElection(2703);
+			isLeader = election.run();
+			listener.setLeader(isLeader);
+			leaderIsDead = false;
+			Thread t = new Thread(new Heartbeat(IPs.getIPsAsList,isLeader));
+			t.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

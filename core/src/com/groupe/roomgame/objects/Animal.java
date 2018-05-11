@@ -65,5 +65,13 @@ public class Animal extends Character{
 		this.respect = respect;
 	}
 
+	public void cleanRoom(){
+
+	}
+
+	public void dirtyRoom(){
+		
+	}
+
 
 }
