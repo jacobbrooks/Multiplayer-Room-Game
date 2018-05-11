@@ -9,6 +9,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.groupe.roomgame.tools.BodyBuilder;
 import com.groupe.roomgame.tools.Constants;
+import com.groupe.roomgame.screens.GameScreen;
+
+import java.util.Random;
 
 public abstract class Character{
 	
@@ -30,6 +33,8 @@ public abstract class Character{
 
 	protected Room currentRoom;
 
+	protected Random rand;
+
 	public Character(int id, float x, float y, World world){
 		this.rect = new Rectangle(x, y, 64, 64);
 		body = BodyBuilder.createBox(world, BodyType.DynamicBody, rect, cBits, mBits, this);
@@ -38,6 +43,7 @@ public abstract class Character{
 		respect = 40;
 		this.x = x / 100;
 		this.y = y / 100;
+		this.rand = new Random();
 	}
 	
 	public void setRoom(Room[] rooms) {
@@ -80,5 +86,7 @@ public abstract class Character{
 	public abstract void cleanRoom();
 
 	public abstract void dirtyRoom();
+
+	public abstract boolean check(Room[] rooms, GameScreen screen);
 	
 }

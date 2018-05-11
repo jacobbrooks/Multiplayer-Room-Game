@@ -147,10 +147,6 @@ public class Listener {
 							float y = byteBuffer.getFloat();
 							gameState.get(id).update(x, y, respect);
 						}
-						
-						/*if (packet.getAddress().getHostAddress().equals(IPs.leader.getHostAddress()))
-							GameScreen.leaderId = id;*/
-
 					} catch (IOException e) {
 						System.out.println("Time out.");
 					}
