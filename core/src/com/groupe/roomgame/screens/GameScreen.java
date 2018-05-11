@@ -40,6 +40,7 @@ import com.groupe.roomgame.networking.election.IPs;
 import com.groupe.roomgame.networking.election.HoldElection;
 import com.groupe.roomgame.objects.Character;
 import com.groupe.roomgame.objects.Animal;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class GameScreen implements Screen{
 
@@ -176,6 +177,14 @@ public class GameScreen implements Screen{
 		return new float[]{roomPosX, roomPosY};
 	}
 
+	private void printLabel(SpriteBatch batch){
+		BitmapFont font;
+		String s = "Respect: " + pc.getRespect();
+		CharSequence str = s;
+		font = new BitmapFont();
+		font.draw(batch, str, pc.getX() * 100, (pc.getY() * 100) + 30);
+	}
+
 	private void loadMap(String mapName) {
 		map = new TmxMapLoader().load(mapName);
 		renderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.SCALE);
@@ -247,6 +256,8 @@ public class GameScreen implements Screen{
 
 		sendCharacterUpdatePacket(pc);
 		updateState();
+
+		printLabel(batch);
 
 		batch.end();
 		debug.render(world, camera.combined);
