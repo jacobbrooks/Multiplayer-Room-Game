@@ -17,6 +17,7 @@ public class IPs {
 
 	public static String nuc18String = "129.3.20.78";
 	public static String nuc14String = "129.3.20.74";
+	public static String nuc12String = "129.3.20.72";
 	public static String nuc27String = "129.3.20.87";
 
 
@@ -28,6 +29,7 @@ public class IPs {
 	public static InetAddress nuc18;
 	public static InetAddress nuc14;
 	public static InetAddress nuc27;
+	public static InetAddress nuc12;
 
 	public static CopyOnWriteArrayList<String> needToVote;
 	public static CopyOnWriteArrayList<String> needToVoteStored;
@@ -47,6 +49,7 @@ public class IPs {
 	public static void set2() throws IOException {
 		//nuc7 = InetAddress.getByName(nuc7String);
 		nuc14 = InetAddress.getByName(nuc14String);
+		nuc12 = InetAddress.getByName(nuc12String);
 	}
 
 	/*public static void set3() throws IOException {
@@ -63,8 +66,8 @@ public class IPs {
 
 	public static void set3() throws IOException {
 		nuc27 = InetAddress.getByName(nuc27String);
-		getIPs = new InetAddress[]{nuc18, nuc14, nuc27};
-		getIPsAsString = new String[]{nuc18String, nuc14String, nuc27String};
+		getIPs = new InetAddress[]{nuc18, nuc14, nuc27, nuc12};
+		getIPsAsString = new String[]{nuc18String, nuc14String, nuc27String, nuc12String};
 		getIPsAsList = new CopyOnWriteArrayList<InetAddress>(getIPs);
 		needToVote = new CopyOnWriteArrayList<String>(getIPsAsString);
 		needToVoteStored = new CopyOnWriteArrayList<String>(needToVote);

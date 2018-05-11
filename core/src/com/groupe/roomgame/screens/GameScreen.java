@@ -314,6 +314,11 @@ public class GameScreen implements Screen{
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
 			Character tmp = gameState.get(it.next());
+			if (pc.getRoom() == null)
+				System.out.println("PC ROOM NULL");
+			if (tmp.getRoom() == null)
+				System.out.println("ANIMAL ROOM NULL");
+
 			if (tmp instanceof Player)
 				continue;
 			tmp.setRoom(rooms);
