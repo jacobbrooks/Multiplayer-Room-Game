@@ -64,6 +64,7 @@ public class NPC extends Character{
 		screen.updateState();
 		setRoom(rooms);
 		dirtyRoom();
+		return left;
 	}
 
 	private boolean leaveRoom(GameScreen screen){

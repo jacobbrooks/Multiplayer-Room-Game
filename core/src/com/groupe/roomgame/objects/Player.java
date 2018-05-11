@@ -81,6 +81,6 @@ public class Player extends Character{
 	}
 
 	public boolean check(Room[] rooms, GameScreen screen){
-
+		return false;
 	}
 }

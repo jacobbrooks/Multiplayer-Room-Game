@@ -134,7 +134,7 @@ public class GameScreen implements Screen{
 		return characters;
 	}
 	
-	private float[] randomRoomCoordinates(boolean random, int roomID) {
+	public float[] randomRoomCoordinates(boolean random, int roomID) {
 
 		int roomIndex = -1;
 
@@ -229,18 +229,13 @@ public class GameScreen implements Screen{
 		world.step(1/60f, 8, 3);
 
 		if (leaderIsDead){
-			reHoldElection();
+			reholdElection();
 		}
     
 		renderer.render();
 		renderer.setView(camera);
 		camera.position.set(pc.getBody().getPosition().x, pc.getBody().getPosition().y, 0);
 		camera.update();
-
-		world.step(1/60f, 8, 3);
-
-		if (leaderIsDead)
-			reholdElection();
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
