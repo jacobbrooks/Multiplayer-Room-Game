@@ -14,6 +14,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.groupe.roomgame.tools.BodyBuilder;
 import com.groupe.roomgame.objects.Character;
 
+import com.groupe.roomgame.screens.GameScreen;
+
 public class Animal extends Character{
 	
 	public Animal(int id, float x, float y, World world) {
@@ -65,12 +67,36 @@ public class Animal extends Character{
 		this.respect = respect;
 	}
 
-	public void cleanRoom(){
+	public boolean check(Room[] rooms, GameScreen screen){
+		boolean left = leaveRoom(screen);
+		screen.updateState();
+		setRoom(rooms);
+		cleanRoom();
+		return left;
+	}
 
+	private boolean leaveRoom(GameScreen screen){
+		if (currentRoom.getRoomState() == 1){
+			float[] coords = new float[2];
+			int newRoomID = rand.nextInt();
+			while (newRoomID == currentRoom.getID())
+				newRoomID = rand.nextInt();
+
+			coords = screen.randomRoomCoordinates(false, newRoomID);
+			update(coords[0], coords[1]);
+			return true;
+		}
+		return false;
+	}
+
+	public void cleanRoom(){
+		/* like clean rooms */
+		if (currentRoom.getRoomState() == 2)
+			currentRoom.setRoomState(1);
 	}
 
 	public void dirtyRoom(){
-		
+		/* animal will never want to dirty a room */
 	}
 
 

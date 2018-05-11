@@ -206,37 +206,35 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(0,0,0,0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		world.step(1/60f, 8, 3);
-
-		if (leaderIsDead){
-			reHoldElection();
-		}
-
-		
 		renderer.render();
 		renderer.setView(camera);
-
 		camera.position.set(pc.getBody().getPosition().x, pc.getBody().getPosition().y, 0);
-
 		camera.update();
+
+		world.step(1/60f, 8, 3);
+
+		if (leaderIsDead)
+			reholdElection();
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
 		handleInput();
-		pc.update(pc.getBody().getPosition().x, pc.getBody().getPosition().y);
+		pc.update(pc.getBody().getPosition().x, pc.getBody().getPosition().y, pc.getRespect());
 		pc.setRoom(rooms);
 
 		sendPlayerUpdatePacket();
 		updateState();
 
+		System.out.println("Room " + pc.getRoom().getID() + " state: " + pc.getRoom().getRoomState());
+
 		batch.end();
 		debug.render(world, camera.combined);
 	}
 
-	private void sendRoomUpdatePacket(){
+	private void sendRoomUpdatePacket(Room room){
 		DataPacket packet = new DataPacket();
-		packet.createRoomUpdatePacket(pc.getRoom().getID(), pc.getRoom().getRoomState());
+		packet.createRoomUpdatePacket(room.getID(), room.getRoomState());
 		updater.update(packet, isLeader);
 	}
 
@@ -246,7 +244,7 @@ public class GameScreen implements Screen{
 		updater.update(packet, isLeader);	
 	}
 
-	private void updateState(){
+	public void updateState(){
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
 			Character tmp = gameState.get(it.next());
@@ -277,19 +275,31 @@ public class GameScreen implements Screen{
 			pc.getSprite().setRotation((float) Math.toDegrees(3 * Math.PI / 2));
 		}
 
-		if (Gdx.input.isKeyPressed(Keys.D)){
+		if (Gdx.input.isKeyJustPressed(Keys.D)){
 			pc.dirtyRoom();
-			sendRoomUpdatePacket();
-
+			check();
+			sendRoomUpdatePacket(pc.getRoom());
 		}
 
-		if (Gdx.input.isKeyPressed(Keys.C)){
-			sendRoomUpdatePacket();
+		if (Gdx.input.isKeyJustPressed(Keys.C)){
 			pc.cleanRoom();
+			check();
+			sendRoomUpdatePacket(pc.getRoom());
 		}
 	}
 
-	private void reHoldElection(){
+	private void check(){
+		Iterator<Integer> it = gameState.keySet().iterator();
+		while(it.hasNext()) {
+			Character tmp = gameState.get(it.next());
+			if (!(tmp instanceof Player)){
+				if (tmp.check(rooms, this))
+					sendRoomUpdatePacket(tmp.getRoom());
+			}
+		}
+	}
+
+	private void reholdElection(){
 		try {
 			IPs.getIPsAsList.remove(IPs.leader);
 

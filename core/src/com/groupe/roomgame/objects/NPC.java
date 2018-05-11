@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
+import com.groupe.roomgame.screens.GameScreen;
+
 public class NPC extends Character{
 	
 	public NPC(int id, float x, float y, World world) {
@@ -57,12 +59,36 @@ public class NPC extends Character{
 		this.respect = respect;
 	}
 
+	public boolean check(Room[] rooms, GameScreen screen){
+		boolean left = leaveRoom(screen);
+		screen.updateState();
+		setRoom(rooms);
+		dirtyRoom();
+	}
+
+	private boolean leaveRoom(GameScreen screen){
+		if (currentRoom.getRoomState() == 0){
+			float[] coords = new float[2];
+			int newRoomID = rand.nextInt();
+			while (newRoomID == currentRoom.getID())
+				newRoomID = rand.nextInt();
+
+			coords = screen.randomRoomCoordinates(false, newRoomID);
+			update(coords[0], coords[1]);
+			return true;
+		}
+		return false;
+	}
+
 	public void cleanRoom(){
+		/* npc will never want to clean a room */
 
 	}
 
 	public void dirtyRoom(){
-		
+		/* like dirty rooms */
+		if (currentRoom.getRoomState() == 0)
+			currentRoom.setRoomState(1);
 	}
 
 }
