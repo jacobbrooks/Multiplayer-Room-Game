@@ -136,8 +136,8 @@ public class Listener {
 						float dx = byteBuffer.getFloat();
 						float dy = byteBuffer.getFloat();
 
-						if (packet.getAddress().getHostAddress().equals(IPs.leader.getHostAddress()))
-							GameScreen.leaderId = id;
+						/*if (packet.getAddress().getHostAddress().equals(IPs.leader.getHostAddress()))
+							GameScreen.leaderId = id;*/
 
 						gameState.get(id).update(dx, dy);
 					} catch (IOException e) {

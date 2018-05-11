@@ -211,10 +211,11 @@ public class GameScreen implements Screen{
 		if (leaderIsDead){
 			try {
 				IPs.getIPsAsList.remove(IPs.leader);
-				if (!world.isLocked())
+				
+				/*if (!world.isLocked())
 					world.destroyBody(gameState.get(leaderId).getBody());
 
-				gameState.remove(leaderId);
+				gameState.remove(leaderId);*/
 
 				String[] tmp = new String[IPs.getIPsAsList.size()];
 				for (int i = 0; i < tmp.length; i++)
