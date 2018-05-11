@@ -70,7 +70,6 @@ public class Animal extends Character{
 
 	public boolean check(Room[] rooms, GameScreen screen){
 		setRoom(rooms);
-		System.out.println("Old room: " + currentRoom.getID());
 		boolean left = leaveRoom(screen);
 		screen.updateState();
 		setRoom(rooms);

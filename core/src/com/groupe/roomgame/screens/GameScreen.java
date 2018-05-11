@@ -23,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.groupe.roomgame.networking.Listener;
 import com.groupe.roomgame.networking.packets.DataPacket;
 import com.groupe.roomgame.networking.Updater;
@@ -177,17 +176,6 @@ public class GameScreen implements Screen{
 		return new float[]{roomPosX, roomPosY};
 	}
 
-	private void renderDirtyRoom(int roomID, SpriteBatch batch){
-		Sprite[] socks = new Sprite[8];
-		for(int i = 0; i < 8; i++){
-			socks[i] = new Sprite(new Texture("room/dirtysocks.png"));
-			socks[i].setSize(1, 1);
-			float[] coordinates = randomRoomCoordinates(false, roomID);
-			socks[i].setPosition(coordinates[0], coordinates[1]);
-			socks[i].draw(batch);
-		}
-	}
-
 	private void loadMap(String mapName) {
 		map = new TmxMapLoader().load(mapName);
 		renderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.SCALE);
@@ -210,7 +198,7 @@ public class GameScreen implements Screen{
 			for (MapObject object : map.getLayers().get("Room " + (i + 1)).getObjects().getByType(RectangleMapObject.class)) {
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
 				Body body = BodyBuilder.createBox(world, Constants.STATIC_BODY, rect, Constants.INTERACTIVE_BITS, Constants.INTERACTIVE_BITS, this);
-				rooms[i] = new Room(i + 1, rect, body);
+				rooms[i] = new Room(i + 1, rect, body, this);
 				rooms[i].setRoomState(rand.nextInt(3));
 			}
 		}
@@ -244,9 +232,10 @@ public class GameScreen implements Screen{
 		pc.update(pc.getBody().getPosition().x, pc.getBody().getPosition().y, pc.getRespect());
 		pc.setRoom(rooms);
 
-		if(pc.getRoom().getRoomState() == Room.DIRTY){
-			renderDirtyRoom(pc.getRoom().getID(), batch);
-		}
+		System.out.println("Room ID: " + pc.getRoom().getID() + ", Room State: " + pc.getRoom().getRoomState());
+
+		if(pc.getRoom().getRoomState() == Room.DIRTY)
+			pc.getRoom().renderDirtyRoom(batch);
 
 		sendPlayerUpdatePacket();
 		updateState();
