@@ -240,16 +240,18 @@ public class GameScreen implements Screen{
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
-		if(pc.getRoom().getRoomState() == Room.DIRTY){
-			renderDirtyRoom(pc.getRoom().getID(), batch);
-		}
-
 		handleInput();
 		pc.update(pc.getBody().getPosition().x, pc.getBody().getPosition().y, pc.getRespect());
 		pc.setRoom(rooms);
 
+		if(pc.getRoom().getRoomState() == Room.DIRTY){
+			renderDirtyRoom(pc.getRoom().getID(), batch);
+		}
+
 		sendPlayerUpdatePacket();
 		updateState();
+
+		//System.out.println("Room: " + pc.getRoom().getID() + " - state: " + pc.getRoom().getRoomState());
 
 		batch.end();
 		debug.render(world, camera.combined);

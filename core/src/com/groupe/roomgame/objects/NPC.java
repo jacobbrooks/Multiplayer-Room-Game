@@ -33,6 +33,7 @@ public class NPC extends Character{
 	public void update(float x, float y){
 		this.x = x;
 		this.y = y;
+		this.rect.setPosition(x * 100, y * 100);
 	}
 
 	public float getX(){
@@ -60,6 +61,7 @@ public class NPC extends Character{
 	}
 
 	public boolean check(Room[] rooms, GameScreen screen){
+		setRoom(rooms);
 		boolean left = leaveRoom(screen);
 		screen.updateState();
 		setRoom(rooms);
@@ -70,9 +72,9 @@ public class NPC extends Character{
 	private boolean leaveRoom(GameScreen screen){
 		if (currentRoom.getRoomState() == 0){
 			float[] coords = new float[2];
-			int newRoomID = rand.nextInt();
+			int newRoomID = rand.nextInt(6) + 1;
 			while (newRoomID == currentRoom.getID())
-				newRoomID = rand.nextInt();
+				newRoomID = rand.nextInt(6) + 1;
 
 			coords = screen.randomRoomCoordinates(false, newRoomID);
 			update(coords[0], coords[1]);
