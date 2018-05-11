@@ -182,6 +182,7 @@ public class GameScreen implements Screen{
 		String s = "Respect: " + pc.getRespect();
 		CharSequence str = s;
 		font = new BitmapFont();
+		font.setScale(2f);
 		font.draw(batch, str, pc.getX() * 100, (pc.getY() * 100) + 30);
 	}
 
