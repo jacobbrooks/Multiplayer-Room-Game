@@ -33,6 +33,7 @@ public class NPC extends Character{
 	public void update(float x, float y){
 		this.x = x;
 		this.y = y;
+		this.rect.setPosition(x * 100, y * 100);
 	}
 
 	public float getX(){
@@ -60,6 +61,7 @@ public class NPC extends Character{
 	}
 
 	public boolean check(Room[] rooms, GameScreen screen){
+		setRoom(rooms);
 		boolean left = leaveRoom(screen);
 		screen.updateState();
 		setRoom(rooms);

@@ -234,12 +234,13 @@ public class GameScreen implements Screen{
 
 		System.out.println("Room ID: " + pc.getRoom().getID() + ", Room State: " + pc.getRoom().getRoomState());
 
-		if(pc.getRoom().getRoomState() == Room.DIRTY){
+		if(pc.getRoom().getRoomState() == Room.DIRTY)
 			pc.getRoom().renderDirtyRoom(batch);
-		}
 
 		sendPlayerUpdatePacket();
 		updateState();
+
+		//System.out.println("Room: " + pc.getRoom().getID() + " - state: " + pc.getRoom().getRoomState());
 
 		batch.end();
 		debug.render(world, camera.combined);

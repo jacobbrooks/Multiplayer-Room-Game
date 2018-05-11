@@ -41,6 +41,7 @@ public class Animal extends Character{
 	public void update(float x, float y){
 		this.x = x;
 		this.y = y;
+		this.rect.setPosition(x * 100, y * 100);
 	}
 
 	public float getX(){
@@ -92,6 +93,7 @@ public class Animal extends Character{
 
 	public void cleanRoom(){
 		/* like clean rooms */
+		System.out.println("new room: " + currentRoom.getID());
 		if (currentRoom.getRoomState() == 2)
 			currentRoom.setRoomState(1);
 	}
