@@ -68,6 +68,7 @@ public class Animal extends Character{
 	}
 
 	public boolean check(Room[] rooms, GameScreen screen){
+		setRoom(rooms);
 		boolean left = leaveRoom(screen);
 		screen.updateState();
 		setRoom(rooms);
@@ -78,9 +79,9 @@ public class Animal extends Character{
 	private boolean leaveRoom(GameScreen screen){
 		if (currentRoom.getRoomState() == 1){
 			float[] coords = new float[2];
-			int newRoomID = rand.nextInt();
+			int newRoomID = rand.nextInt(6) + 1;
 			while (newRoomID == currentRoom.getID())
-				newRoomID = rand.nextInt();
+				newRoomID = rand.nextInt(6) + 1;
 
 			coords = screen.randomRoomCoordinates(false, newRoomID);
 			update(coords[0], coords[1]);

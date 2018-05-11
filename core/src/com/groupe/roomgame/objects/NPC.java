@@ -70,9 +70,9 @@ public class NPC extends Character{
 	private boolean leaveRoom(GameScreen screen){
 		if (currentRoom.getRoomState() == 0){
 			float[] coords = new float[2];
-			int newRoomID = rand.nextInt();
+			int newRoomID = rand.nextInt(6) + 1;
 			while (newRoomID == currentRoom.getID())
-				newRoomID = rand.nextInt();
+				newRoomID = rand.nextInt(6) + 1;
 
 			coords = screen.randomRoomCoordinates(false, newRoomID);
 			update(coords[0], coords[1]);
