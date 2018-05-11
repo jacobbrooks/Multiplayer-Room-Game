@@ -50,6 +50,7 @@ public abstract class Character{
 		for (Room r : rooms) {
 			if (rect.overlaps(r.getRect())) {
 				this.currentRoom = r;
+				return;
 			}
 		}
 	}

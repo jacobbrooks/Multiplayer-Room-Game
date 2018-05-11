@@ -62,22 +62,23 @@ public class NPC extends Character{
 
 	public boolean check(Room[] rooms, GameScreen screen){
 		setRoom(rooms);
-		boolean left = leaveRoom(screen);
-		screen.updateState();
-		setRoom(rooms);
-		dirtyRoom();
+		boolean left = leaveRoom(screen, rooms);
+		if (left)
+			dirtyRoom();
 		return left;
 	}
 
-	private boolean leaveRoom(GameScreen screen){
-		if (currentRoom.getRoomState() == 0){
-			float[] coords = new float[2];
+	private boolean leaveRoom(GameScreen screen, Room[] rooms){
+		if (currentRoom.getRoomState() == Room.CLEAN){
 			int newRoomID = rand.nextInt(6) + 1;
 			while (newRoomID == currentRoom.getID())
 				newRoomID = rand.nextInt(6) + 1;
 
-			coords = screen.randomRoomCoordinates(false, newRoomID);
+			float[] coords = screen.randomRoomCoordinates(false, newRoomID);
 			update(coords[0], coords[1]);
+			currentRoom = rooms[newRoomID - 1];
+			this.x = x / 100;
+			this.y = y / 100;
 			return true;
 		}
 		return false;
@@ -85,12 +86,11 @@ public class NPC extends Character{
 
 	public void cleanRoom(){
 		/* npc will never want to clean a room */
-
 	}
 
 	public void dirtyRoom(){
 		/* like dirty rooms */
-		if (currentRoom.getRoomState() == 0)
+		if (currentRoom.getRoomState() == Room.CLEAN)
 			currentRoom.setRoomState(1);
 	}
 

@@ -70,22 +70,23 @@ public class Animal extends Character{
 
 	public boolean check(Room[] rooms, GameScreen screen){
 		setRoom(rooms);
-		boolean left = leaveRoom(screen);
-		screen.updateState();
-		setRoom(rooms);
-		cleanRoom();
+		boolean left = leaveRoom(screen, rooms);
+		if (left)
+			cleanRoom();
 		return left;
 	}
 
-	private boolean leaveRoom(GameScreen screen){
-		if (currentRoom.getRoomState() == 1){
-			float[] coords = new float[2];
+	private boolean leaveRoom(GameScreen screen, Room[] rooms){
+		if (currentRoom.getRoomState() == Room.DIRTY){
 			int newRoomID = rand.nextInt(6) + 1;
 			while (newRoomID == currentRoom.getID())
 				newRoomID = rand.nextInt(6) + 1;
 
-			coords = screen.randomRoomCoordinates(false, newRoomID);
+			float[] coords = screen.randomRoomCoordinates(false, newRoomID);
 			update(coords[0], coords[1]);
+			currentRoom = rooms[newRoomID - 1];
+			this.x = x / 100;
+			this.y = y / 100;
 			return true;
 		}
 		return false;
@@ -93,8 +94,7 @@ public class Animal extends Character{
 
 	public void cleanRoom(){
 		/* like clean rooms */
-		System.out.println("new room: " + currentRoom.getID());
-		if (currentRoom.getRoomState() == 2)
+ 		if (currentRoom.getRoomState() == 2)
 			currentRoom.setRoomState(1);
 	}
 

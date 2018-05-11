@@ -27,10 +27,9 @@ public class Room {
 		this.rect = rect;
 		this.body = body;
 		this.gameScreen = gameScreen;
-		generateSocks();
 	}
 
-	private void generateSocks(){
+	public void generateSocks(){
 		socks = new Sprite[8];
 		for(int i = 0; i < 8; i++){
 			socks[i] = new Sprite(new Texture("room/dirtysocks.png"));
