@@ -29,9 +29,10 @@ public class Player extends Character{
 		sprite.draw(sb);
 	}
 
-	public void update(float x, float y){
+	public void update(float x, float y, int respect){
 		this.x = x;
 		this.y = y;
+		this.respect = respect;
 	}
 
 	public float getX(){
