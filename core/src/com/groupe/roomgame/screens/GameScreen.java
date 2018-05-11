@@ -315,6 +315,7 @@ public class GameScreen implements Screen{
 		while(it.hasNext()) {
 			Character tmp = gameState.get(it.next());
 			tmp.setRoom(rooms);
+			pc.setRoom(rooms);
 			if (pc.getRoom().getID() != tmp.getRoom().getID())
 				continue;
 			if (tmp instanceof Animal && dirty)
@@ -333,6 +334,7 @@ public class GameScreen implements Screen{
 		while(it.hasNext()) {
 			Character tmp = gameState.get(it.next());
 			tmp.setRoom(rooms);
+			pc.setRoom(rooms);
 			if (!(tmp instanceof Player) && pc.getRoom().getID() == tmp.getRoom().getID()){
 				if (tmp.check(rooms, this)){
 					updateState();
