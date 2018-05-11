@@ -28,6 +28,8 @@ public abstract class Character{
 	protected float x;
 	protected float y;
 
+	protected Room currentRoom;
+
 	public Character(int id, float x, float y, World world){
 		this.rect = new Rectangle(x, y, 64, 64);
 		body = BodyBuilder.createBox(world, BodyType.DynamicBody, rect, cBits, mBits, this);
@@ -38,17 +40,22 @@ public abstract class Character{
 		this.y = y / 100;
 	}
 	
-	public void getRoom(Room[] rooms) {
+	public void setRoom(Room[] rooms) {
 		for (Room r : rooms) {
 			if (rect.overlaps(r.getRect())) {
-				System.out.println(r.getID());
-				System.out.println("State: " + r.getRoomState());
+				this.currentRoom = r;
 			}
 		}
 	}
+
+	public Room getRoom(){
+		return currentRoom;
+	}
 	
-	public void update(float delta) {
-		this.rect.setPosition(body.getPosition().x * 100, body.getPosition().y * 100);
+	public void update(float x, float y) {
+		this.x = x;
+		this.y = y;
+		this.rect.setPosition(x * 100, y * 100);
 	}
 
 	public abstract Body getBody();
@@ -56,8 +63,6 @@ public abstract class Character{
 	public abstract Sprite getSprite();
 	
 	public abstract void render(SpriteBatch sb);
-
-	public abstract void update(float dx, float dy);
 
 	public abstract int getId();
 	
@@ -70,5 +75,9 @@ public abstract class Character{
 	public abstract float getX();
 
 	public abstract float getY();
+
+	public abstract void cleanRoom();
+
+	public abstract void dirtyRoom();
 	
 }

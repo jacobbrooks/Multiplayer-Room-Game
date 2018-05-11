@@ -29,10 +29,30 @@ public class Player extends Character{
 		sprite.draw(sb);
 	}
 
-	public void update(float x, float y, int respect){
-		this.x = x;
-		this.y = y;
-		this.respect = respect;
+	public void dirtyRoom(){
+		switch (currentRoom.getRoomState()){
+			case 0:
+				currentRoom.setRoomState(1);
+				break;
+			case 1:
+				currentRoom.setRoomState(2);
+				break;
+			case 2:
+				break;
+		}
+	}
+
+	public void cleanRoom(){
+		switch (currentRoom.getRoomState()){
+			case 0:
+				break;
+			case 1:
+				currentRoom.setRoomState(0);
+				break;
+			case 2:
+				currentRoom.setRoomState(1);
+				break;
+		}
 	}
 
 	public float getX(){
@@ -57,7 +77,5 @@ public class Player extends Character{
 	
 	public void setRespect(int respect) {
 		this.respect = respect;
-	}
-
-	
+	}	
 }
