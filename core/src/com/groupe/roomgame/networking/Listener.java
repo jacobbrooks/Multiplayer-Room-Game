@@ -121,28 +121,40 @@ public class Listener {
 		new Thread(new Runnable() {
 			public void run() {
 				while (true) {
+					
 					byte[] buffer = new byte[256];
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+					
 					try {
+						
 						socket.receive(packet);
 
 						if (isLeader)
 							sendOut(packet, buffer);
 
 						ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+						
 						int packetType = byteBuffer.getInt();
-						int id = byteBuffer.getInt();
-						int respect = byteBuffer.getInt();
-						float dx = byteBuffer.getFloat();
-						float dy = byteBuffer.getFloat();
 
+						if(packetType == DataPacket.ROOM_UPDATE){
+							int roomID = byteBuffer.getInt();
+							int roomState = byteBuffer.getInt();
+							rooms[roomID].setRoomState(roomState);
+						}else{
+							int id = byteBuffer.getInt();
+							int respect = byteBuffer.getInt();
+							float x = byteBuffer.getFloat();
+							float y = byteBuffer.getFloat();
+							gameState.get(id).update(x, y, respect);
+						}
+						
 						/*if (packet.getAddress().getHostAddress().equals(IPs.leader.getHostAddress()))
 							GameScreen.leaderId = id;*/
 
-						gameState.get(id).update(dx, dy);
 					} catch (IOException e) {
 						System.out.println("Time out.");
 					}
+
 				}
 			}
 		}).start();

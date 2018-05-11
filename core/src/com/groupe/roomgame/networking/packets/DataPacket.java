@@ -14,9 +14,8 @@ public class DataPacket {
 	/*
 	 * Packet types
 	 */
-	public static final int CHARACTER_INIT = 0;
-	public static final int CHARACTER_UPDATE = 1;
-	public static final int ROOM_UPDATE = 2;
+	public static final int CHARACTER_UPDATE = 0;
+	public static final int ROOM_UPDATE = 1;
 	
 	private byte[] bytes;
 	
@@ -57,10 +56,10 @@ public class DataPacket {
 	/*
 	 * Character update packet : CHARACTER_UPDATE
 	 */
-	public void createCharacterUpdatePacket(int id, int respect, float dx, float dy) {
+	public void createCharacterUpdatePacket(int id, int respect, float x, float y) {
 		int size = (3 * (Integer.SIZE / 8)) + (2 * (Float.SIZE / 8));
 		ByteBuffer buffer = ByteBuffer.allocate(size);
-		buffer.putInt(CHARACTER_UPDATE).putInt(id).putInt(respect).putFloat(dx).putFloat(dy).flip();
+		buffer.putInt(CHARACTER_UPDATE).putInt(id).putInt(respect).putFloat(x).putFloat(y).flip();
 		bytes = buffer.array();
 	}
 	
