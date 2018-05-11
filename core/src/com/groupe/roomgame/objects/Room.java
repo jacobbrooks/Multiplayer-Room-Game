@@ -5,6 +5,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public class Room {
 
+	public static final int CLEAN = 0;
+	public static final int HALF_DIRTY = 1;
+	public static final int DIRTY = 2;
+
 	private int id;
 	private Rectangle rect;
 	private Body body;
