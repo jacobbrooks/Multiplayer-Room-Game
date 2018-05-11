@@ -4,6 +4,8 @@ import java.net.*;
 import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.groupe.roomgame.screens.GameScreen;
+
 import com.groupe.roomgame.networking.packets.DataPacket;
 import com.groupe.roomgame.networking.election.FindOwnIP;
 import com.groupe.roomgame.networking.election.IPs;
@@ -123,6 +125,7 @@ public class Listener {
 					DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 					try {
 						socket.receive(packet);
+
 						if (isLeader)
 							sendOut(packet, buffer);
 
@@ -132,7 +135,10 @@ public class Listener {
 						int respect = byteBuffer.getInt();
 						float dx = byteBuffer.getFloat();
 						float dy = byteBuffer.getFloat();
-						// System.out.println("vx: " + vx + ", vy: " + vy);
+
+						if (packet.getAddress().getHostAddress().equals(IPs.leader.getHostAddress()))
+							GameScreen.leaderId = id;
+
 						gameState.get(id).update(dx, dy);
 					} catch (IOException e) {
 						System.out.println("Time out.");
