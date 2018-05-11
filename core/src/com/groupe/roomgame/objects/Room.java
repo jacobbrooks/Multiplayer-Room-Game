@@ -16,7 +16,9 @@ public class Room {
 	private int id;
 	private Rectangle rect;
 	private Body body;
+
 	private Sprite[] socks;
+	private Sprite[] lemonPledge;
 
 	private GameScreen gameScreen;
 
@@ -33,15 +35,31 @@ public class Room {
 		socks = new Sprite[8];
 		for(int i = 0; i < 8; i++){
 			socks[i] = new Sprite(new Texture("room/dirtysocks.png"));
-			socks[i].setSize(1, 1);
+			socks[i].setSize(.5f, .5f);
 			float[] coordinates = gameScreen.randomRoomCoordinates(false, id);
-			socks[i].setPosition(coordinates[0], coordinates[1]);
+			socks[i].setPosition(coordinates[0] / 100, coordinates[1] / 100);
+		}
+	}
+
+	public void generateLemonPledge(){
+		lemonPledge = new Sprite[8];
+		for(int i = 0; i < 8; i++){
+			lemonPledge[i] = new Sprite(new Texture("room/lemonpledge.png"));
+			lemonPledge[i].setSize(.5f, .5f);
+			float[] coordinates = gameScreen.randomRoomCoordinates(false, id);
+			lemonPledge[i].setPosition(coordinates[0] / 100, coordinates[1] / 100);
 		}
 	}
 	
 	public void renderDirtyRoom(SpriteBatch batch){
 		for(int i = 0; i < socks.length; i++){
 			socks[i].draw(batch);
+		}
+	}
+
+	public void renderCleanRoom(SpriteBatch batch){
+		for(int i = 0; i < lemonPledge.length; i++){
+			lemonPledge[i].draw(batch);
 		}
 	}
 	

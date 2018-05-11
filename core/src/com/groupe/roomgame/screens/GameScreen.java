@@ -191,8 +191,11 @@ public class GameScreen implements Screen{
 		new Hallway(map, world, "Hallway");
 		new RoomWalls(map, world, "Room Walls");
 		loadRooms();
-		for (Room r : rooms)
+    
+		for(Room r : rooms){
 			r.generateSocks();
+			r.generateLemonPledge();
+		}
 	}
 
 	private void loadRooms() {
@@ -234,10 +237,13 @@ public class GameScreen implements Screen{
 		pc.update(pc.getBody().getPosition().x, pc.getBody().getPosition().y, pc.getRespect());
 		pc.setRoom(rooms);
 
-		System.out.println("Room ID: " + pc.getRoom().getID() + ", Room State: " + pc.getRoom().getRoomState());
-
-		if(pc.getRoom().getRoomState() == Room.DIRTY)
+		if(pc.getRoom().getRoomState() == Room.DIRTY){
 			pc.getRoom().renderDirtyRoom(batch);
+		} else if(pc.getRoom().getRoomState() == Room.CLEAN){
+			pc.getRoom().renderCleanRoom(batch);
+		}
+
+		System.out.println("Room: " + pc.getRoom().getID() + " - state: " + pc.getRoom().getRoomState());
 
 		sendCharacterUpdatePacket(pc);
 		updateState();
