@@ -291,14 +291,33 @@ public class GameScreen implements Screen{
 
 		if (Gdx.input.isKeyJustPressed(Keys.D)){
 			pc.dirtyRoom();
+			changeRespect(true);
 			check();
 			sendRoomUpdatePacket(pc.getRoom());
 		}
 
 		if (Gdx.input.isKeyJustPressed(Keys.C)){
 			pc.cleanRoom();
+			changeRespect(false);
 			check();
 			sendRoomUpdatePacket(pc.getRoom());
+		}
+	}
+
+	private void changeRespect(boolean dirty){
+		Iterator<Integer> it = gameState.keySet().iterator();
+		while(it.hasNext()) {
+			Character tmp = gameState.get(it.next());
+			if (pc.getRoom().getID() != tmp.getRoom().getID())
+				continue;
+			if (tmp instanceof Animal && dirty)
+				pc.setRespect(pc.getRespect() - 1);
+			else if (tmp instanceof Animal && !dirty)
+				pc.setRespect(pc.getRespect() + 1);
+			if (tmp instanceof NPC && dirty)
+				pc.setRespect(pc.getRespect() + 1);
+			else if (tmp instanceof NPC && !dirty)
+				pc.setRespect(pc.getRespect() - 1);
 		}
 	}
 
