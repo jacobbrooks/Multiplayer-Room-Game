@@ -177,14 +177,14 @@ public class GameScreen implements Screen{
 		return new float[]{roomPosX, roomPosY};
 	}
 
-	private void printLabel(SpriteBatch batch){
+	/*private void printLabel(SpriteBatch batch){
 		BitmapFont font;
 		String s = "Respect: " + pc.getRespect();
 		CharSequence str = s;
 		font = new BitmapFont();
 		font.setScale(2f);
 		font.draw(batch, str, pc.getX() * 100, (pc.getY() * 100) + 30);
-	}
+	}*/
 
 	private void loadMap(String mapName) {
 		map = new TmxMapLoader().load(mapName);
@@ -258,10 +258,10 @@ public class GameScreen implements Screen{
 		sendCharacterUpdatePacket(pc);
 		updateState();
 
-		printLabel(batch);
+		//printLabel(batch);
 
 		batch.end();
-		debug.render(world, camera.combined);
+		//debug.render(world, camera.combined);
 	}
 
 	private void sendRoomUpdatePacket(Room room){
