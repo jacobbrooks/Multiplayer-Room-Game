@@ -191,6 +191,7 @@ public class GameScreen implements Screen{
 		new Hallway(map, world, "Hallway");
 		new RoomWalls(map, world, "Room Walls");
 		loadRooms();
+    
 		for(Room r : rooms){
 			r.generateSocks();
 			r.generateLemonPledge();
@@ -238,14 +239,14 @@ public class GameScreen implements Screen{
 
 		if(pc.getRoom().getRoomState() == Room.DIRTY){
 			pc.getRoom().renderDirtyRoom(batch);
-		}else if(pc.getRoom().getRoomState() == Room.CLEAN){
+		} else if(pc.getRoom().getRoomState() == Room.CLEAN){
 			pc.getRoom().renderCleanRoom(batch);
 		}
-		
-		sendPlayerUpdatePacket();
-		updateState();
 
 		System.out.println("Room: " + pc.getRoom().getID() + " - state: " + pc.getRoom().getRoomState());
+
+		sendCharacterUpdatePacket(pc);
+		updateState();
 
 		batch.end();
 		debug.render(world, camera.combined);
@@ -257,9 +258,9 @@ public class GameScreen implements Screen{
 		updater.update(packet, isLeader);
 	}
 
-	private void sendPlayerUpdatePacket(){
+	private void sendCharacterUpdatePacket(Character c){
 		DataPacket packet = new DataPacket();
-		packet.createCharacterUpdatePacket(pc.getId(), pc.getRespect(), pc.getBody().getPosition().x, pc.getBody().getPosition().y);
+		packet.createCharacterUpdatePacket(c.getId(), c.getRespect(), c.getBody().getPosition().x, c.getBody().getPosition().y);
 		updater.update(packet, isLeader);	
 	}
 
@@ -296,14 +297,33 @@ public class GameScreen implements Screen{
 
 		if (Gdx.input.isKeyJustPressed(Keys.D)){
 			pc.dirtyRoom();
+			changeRespect(true);
 			check();
 			sendRoomUpdatePacket(pc.getRoom());
 		}
 
 		if (Gdx.input.isKeyJustPressed(Keys.C)){
 			pc.cleanRoom();
+			changeRespect(false);
 			check();
 			sendRoomUpdatePacket(pc.getRoom());
+		}
+	}
+
+	private void changeRespect(boolean dirty){
+		Iterator<Integer> it = gameState.keySet().iterator();
+		while(it.hasNext()) {
+			Character tmp = gameState.get(it.next());
+			if (pc.getRoom().getID() != tmp.getRoom().getID())
+				continue;
+			if (tmp instanceof Animal && dirty)
+				pc.setRespect(pc.getRespect() - 1);
+			else if (tmp instanceof Animal && !dirty)
+				pc.setRespect(pc.getRespect() + 1);
+			if (tmp instanceof NPC && dirty)
+				pc.setRespect(pc.getRespect() + 1);
+			else if (tmp instanceof NPC && !dirty)
+				pc.setRespect(pc.getRespect() - 1);
 		}
 	}
 
@@ -311,9 +331,13 @@ public class GameScreen implements Screen{
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
 			Character tmp = gameState.get(it.next());
-			if (!(tmp instanceof Player)){
-				if (tmp.check(rooms, this))
+			tmp.setRoom(rooms);
+			if (!(tmp instanceof Player) && pc.getRoom().getID() == tmp.getRoom().getID()){
+				if (tmp.check(rooms, this)){
+					updateState();
 					sendRoomUpdatePacket(tmp.getRoom());
+					sendCharacterUpdatePacket(tmp);
+				}
 			}
 		}
 	}
