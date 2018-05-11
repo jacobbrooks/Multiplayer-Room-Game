@@ -45,7 +45,7 @@ public class Room {
 		lemonPledge = new Sprite[8];
 		for(int i = 0; i < 8; i++){
 			lemonPledge[i] = new Sprite(new Texture("room/lemonpledge.png"));
-			lemonPledge[i].setSize(.5f, .5f);
+			lemonPledge[i].setSize(.5f, .7f);
 			float[] coordinates = gameScreen.randomRoomCoordinates(false, id);
 			lemonPledge[i].setPosition(coordinates[0] / 100, coordinates[1] / 100);
 		}

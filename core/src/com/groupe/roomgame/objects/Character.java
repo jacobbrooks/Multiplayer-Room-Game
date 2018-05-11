@@ -24,7 +24,7 @@ public abstract class Character{
 	protected int id;
 	protected World world;
 	protected byte cBits = Constants.PLAYER_BITS;
-	protected byte mBits = Constants.NON_INTERACTIVE_BITS | Constants.PLAYER_BITS;
+	protected byte mBits = Constants.NON_INTERACTIVE_BITS;
 	protected Rectangle rect;
 	protected int respect;
 

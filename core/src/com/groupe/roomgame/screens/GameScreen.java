@@ -314,6 +314,7 @@ public class GameScreen implements Screen{
 		Iterator<Integer> it = gameState.keySet().iterator();
 		while(it.hasNext()) {
 			Character tmp = gameState.get(it.next());
+			tmp.setRoom(rooms);
 			if (pc.getRoom().getID() != tmp.getRoom().getID())
 				continue;
 			if (tmp instanceof Animal && dirty)
