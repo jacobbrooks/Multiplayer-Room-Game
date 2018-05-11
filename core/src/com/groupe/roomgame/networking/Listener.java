@@ -139,7 +139,7 @@ public class Listener {
 						if(packetType == DataPacket.ROOM_UPDATE){
 							int roomID = byteBuffer.getInt();
 							int roomState = byteBuffer.getInt();
-							rooms[roomID].setRoomState(roomState);
+							rooms[roomID - 1].setRoomState(roomState);
 						}else{
 							int id = byteBuffer.getInt();
 							int respect = byteBuffer.getInt();

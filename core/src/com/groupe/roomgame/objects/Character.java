@@ -52,9 +52,10 @@ public abstract class Character{
 		return currentRoom;
 	}
 	
-	public void update(float x, float y) {
+	public void update(float x, float y, int respect) {
 		this.x = x;
 		this.y = y;
+		this.respect = respect;
 		this.rect.setPosition(x * 100, y * 100);
 	}
 

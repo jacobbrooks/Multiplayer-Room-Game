@@ -22,6 +22,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.groupe.roomgame.networking.Listener;
 import com.groupe.roomgame.networking.packets.DataPacket;
 import com.groupe.roomgame.networking.Updater;
@@ -78,7 +80,7 @@ public class GameScreen implements Screen{
 		loadMap("map/map.tmx");
 		loadObjects();
 
-		float[] pcCoordinates = randomRoomCoordinates();
+		float[] pcCoordinates = randomRoomCoordinates(true, 0);
 		pc = new Player(rand.nextInt(10000), pcCoordinates[0], pcCoordinates[1], world);
 		gameState.put(pc.getId(), pc);
 
@@ -116,7 +118,7 @@ public class GameScreen implements Screen{
 		for(int i = 0; i < 15; i++) {
 			boolean animal = rand.nextBoolean();
 			
-			float[] roomCoordinates = randomRoomCoordinates();
+			float[] roomCoordinates = randomRoomCoordinates(true, 0);
 			
 			int ranID = rand.nextInt(10000);
 			
@@ -132,13 +134,20 @@ public class GameScreen implements Screen{
 		return characters;
 	}
 	
-	private float[] randomRoomCoordinates() {
-		int randomRoom = rand.nextInt(6);
+	private float[] randomRoomCoordinates(boolean random, int roomID) {
+
+		int roomIndex = -1;
+
+		if(random){
+			roomIndex = rand.nextInt(6);
+		}else{
+			roomIndex = roomID - 1; 
+		}
 		
 		Vector2 center = new Vector2();
-		rooms[randomRoom].getRect().getCenter(center);
-		int halfWidth = (int) rooms[randomRoom].getRect().getWidth() / 2;
-		int halfHeight = (int) rooms[randomRoom].getRect().getHeight() / 2;
+		rooms[roomIndex].getRect().getCenter(center);
+		int halfWidth = (int) rooms[roomIndex].getRect().getWidth() / 2;
+		int halfHeight = (int) rooms[roomIndex].getRect().getHeight() / 2;
 
 		boolean subtractX = rand.nextBoolean();
 		boolean subtractY = rand.nextBoolean();
@@ -166,6 +175,17 @@ public class GameScreen implements Screen{
 		}
 
 		return new float[]{roomPosX, roomPosY};
+	}
+
+	private void renderDirtyRoom(int roomID, SpriteBatch batch){
+		Sprite[] socks = new Sprite[8];
+		for(int i = 0; i < 8; i++){
+			socks[i] = new Sprite(new Texture("room/dirtysocks.png"));
+			socks[i].setSize(1, 1);
+			float[] coordinates = randomRoomCoordinates(false, roomID);
+			socks[i].setPosition(coordinates[0], coordinates[1]);
+			socks[i].draw(batch);
+		}
 	}
 
 	private void loadMap(String mapName) {
@@ -212,7 +232,6 @@ public class GameScreen implements Screen{
 			reHoldElection();
 		}
 
-		
 		renderer.render();
 		renderer.setView(camera);
 
@@ -223,12 +242,18 @@ public class GameScreen implements Screen{
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
+		if(pc.getRoom().getRoomState() == Room.DIRTY){
+			renderDirtyRoom(pc.getRoom().getID(), batch);
+		}
+
 		handleInput();
-		pc.update(pc.getBody().getPosition().x, pc.getBody().getPosition().y);
+		pc.update(pc.getBody().getPosition().x, pc.getBody().getPosition().y, pc.getRespect());
 		pc.setRoom(rooms);
 
 		sendPlayerUpdatePacket();
 		updateState();
+
+		System.out.println("Room ID: " + pc.getRoom().getID() + ", Room state: " + pc.getRoom().getRoomState());
 
 		batch.end();
 		debug.render(world, camera.combined);
